@@ -2,24 +2,22 @@ package com.example.came.cameselleabreujavier_proyecto;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PointF;
 
 import java.util.ArrayList;
 
-public class Nube {
+public class Cloud {
 
     private Context context;
     private int velocidad, posX, posY, alfa, tiempoDibujado = 20;
     private long tiempoActual = System.currentTimeMillis();
-    private Bitmap bitmapNube;
-    private boolean seMueve;
+    private Bitmap imgCloud;
+    private ArrayList<Bitmap> bitmapNubes;
     private int altoPantalla, anchoPantalla;
     private Paint pNube;
 
-    public Nube(Context context, int anchoPantalla, int altoPantalla, ArrayList<Bitmap> bitmapNubes) {
+    public Cloud(Context context, int anchoPantalla, int altoPantalla, ArrayList<Bitmap> bitmapNubes) {
         this.context = context;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
@@ -29,13 +27,13 @@ public class Nube {
         this.alfa = (int) (Math.random() * 255 +150);
         this.pNube = new Paint();
         pNube.setAlpha(alfa);
-//        this.bitmapNube = bitmapNubes;
-        this.bitmapNube = bitmapNubes.get((int) (Math.random() * bitmapNubes.size()));
+        this.bitmapNubes = bitmapNubes;
+        this.imgCloud = bitmapNubes.get((int) (Math.random() * bitmapNubes.size()));
     }
 
 
     public void dibujar(Canvas c) {
-        c.drawBitmap(bitmapNube, posX, posY, pNube);
+        c.drawBitmap(imgCloud, posX, posY, pNube);
     }
 
     public void mover() {
@@ -43,8 +41,9 @@ public class Nube {
         if (System.currentTimeMillis() - tiempoActual > tiempoDibujado) {
             this.posX -= velocidad;
             tiempoActual = System.currentTimeMillis();
-            if (this.posX + bitmapNube.getWidth() < 0) {
-                this.velocidad = (int) (Math.random() * 15 + 7);
+            if (this.posX + imgCloud.getWidth() < 0) {
+                this.velocidad = (int) (Math.random() * 15 + 5);
+                this.imgCloud = bitmapNubes.get((int) (Math.random() * bitmapNubes.size()));
                 posY = (int) (Math.random() * altoPantalla / 3);
                 posX = (int) (Math.random() * anchoPantalla * 3 + anchoPantalla);
             }
@@ -110,20 +109,12 @@ public class Nube {
         this.tiempoActual = tiempoActual;
     }
 
-    public Bitmap getBitmapNube() {
-        return bitmapNube;
+    public Bitmap getImgCloud() {
+        return imgCloud;
     }
 
-    public void setBitmapNube(Bitmap bitmapNube) {
-        this.bitmapNube = bitmapNube;
-    }
-
-    public boolean isSeMueve() {
-        return seMueve;
-    }
-
-    public void setSeMueve(boolean seMueve) {
-        this.seMueve = seMueve;
+    public void setImgCloud(Bitmap imgCloud) {
+        this.imgCloud = imgCloud;
     }
 
     public int getAltoPantalla() {
