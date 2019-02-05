@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 public class Partida extends SurfaceView implements SurfaceHolder.Callback {
     private Context context;//contexto de la aplicacion
@@ -16,7 +15,7 @@ public class Partida extends SurfaceView implements SurfaceHolder.Callback {
     private Utils utils;
     private Hilo hilo;
     private SurfaceHolder surfaceHolder;//maneja superficie de dibujado
-    private Fondo[] fondo;
+    private ImagenesCapa[] imagenesCapa;
     private boolean funcionando = false;//Control del hilo
 
     public Partida(Context context) {
@@ -29,27 +28,27 @@ public class Partida extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
         bitmapFondo = BitmapFactory.decodeResource(getResources(), R.drawable.fondo);
         bitmapFondo = Bitmap.createScaledBitmap(bitmapFondo, bitmapFondo.getWidth(), altoPantalla, true);
-        fondo[0] = new Fondo(0,bitmapFondo, anchoPantalla,1);
-        fondo[1] = new Fondo(0,bitmapFondo, anchoPantalla,1);
+        imagenesCapa[0] = new ImagenesCapa(0,bitmapFondo, anchoPantalla,1);
+        imagenesCapa[1] = new ImagenesCapa(0,bitmapFondo, anchoPantalla,1);
 
     }
 
     public void actualizarFisica() {
-        fondo[0].mover(10);
-        fondo[1].mover(10);
+//        imagenesCapa[0].mover(10);
+//        imagenesCapa[1].mover(10);
 
-        if (fondo[0].posicion.x > anchoPantalla) {
-            fondo[0].posicion.x = fondo[1].posicion.x - fondo[0].imagen.getWidth();
+        if (imagenesCapa[0].posicion.x > anchoPantalla) {
+            imagenesCapa[0].posicion.x = imagenesCapa[1].posicion.x - imagenesCapa[0].imagen.getWidth();
         }
-        if (fondo[1].posicion.x > anchoPantalla) {
-            fondo[1].posicion.x = fondo[0].posicion.x - fondo[1].imagen.getWidth();
+        if (imagenesCapa[1].posicion.x > anchoPantalla) {
+            imagenesCapa[1].posicion.x = imagenesCapa[0].posicion.x - imagenesCapa[1].imagen.getWidth();
         }
     }
 
     public void dibujar(Canvas c) {
         try {
-            c.drawBitmap(fondo[0].imagen, fondo[0].posicion.x, fondo[0].posicion.y, null);
-            c.drawBitmap(fondo[1].imagen, fondo[1].posicion.x, fondo[1].posicion.y, null);
+            c.drawBitmap(imagenesCapa[0].imagen, imagenesCapa[0].posicion.x, imagenesCapa[0].posicion.y, null);
+            c.drawBitmap(imagenesCapa[1].imagen, imagenesCapa[1].posicion.x, imagenesCapa[1].posicion.y, null);
         } catch (Exception e) {
         }
 

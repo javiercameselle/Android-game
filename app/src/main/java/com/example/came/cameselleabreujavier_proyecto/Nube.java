@@ -19,19 +19,18 @@ public class Nube {
     private int altoPantalla, anchoPantalla;
     private Paint pNube;
 
-    public Nube(Context context, int anchoPantalla, int altoPantalla, Bitmap bitmapNubes) {
+    public Nube(Context context, int anchoPantalla, int altoPantalla, ArrayList<Bitmap> bitmapNubes) {
         this.context = context;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
-        this.velocidad = (int) (Math.random() * 13 + 4);
+        this.velocidad = (int) (Math.random() * 15 + 7);
         this.posX = (int) (Math.random() * anchoPantalla + anchoPantalla);
         this.posY = (int) (Math.random() * altoPantalla / 3);
-        this.alfa = (int) (Math.random() * 255 + 0);
+        this.alfa = (int) (Math.random() * 255 +150);
         this.pNube = new Paint();
         pNube.setAlpha(alfa);
-        this.bitmapNube = bitmapNubes;
-//        this.bitmapNube = bitmapsNubes.get((int) (Math.random() * bitmapsNubes.size()));
-//        this.bitmapNube = Bitmap.createScaledBitmap(this.bitmapNube, anchoPantalla / 3, altoPantalla / 5, false);
+//        this.bitmapNube = bitmapNubes;
+        this.bitmapNube = bitmapNubes.get((int) (Math.random() * bitmapNubes.size()));
     }
 
 
@@ -42,9 +41,10 @@ public class Nube {
     public void mover() {
 
         if (System.currentTimeMillis() - tiempoActual > tiempoDibujado) {
-            this.posX += velocidad;
+            this.posX -= velocidad;
             tiempoActual = System.currentTimeMillis();
             if (this.posX + bitmapNube.getWidth() < 0) {
+                this.velocidad = (int) (Math.random() * 15 + 7);
                 posY = (int) (Math.random() * altoPantalla / 3);
                 posX = (int) (Math.random() * anchoPantalla * 3 + anchoPantalla);
             }

@@ -13,14 +13,14 @@ import java.util.Random;
 
 public class Game extends Escena {
 
-    private Fondo[] fondo;
+    private ImagenesCapa[] imagenesCapa;
     private Capa c1, c2;
     private Bitmap bitmapFondo, bitmapAux, bmEspejo;
     private ArrayList<Bitmap> bmFondo, textura, bitmapsNubes;
     private Utils u;
     private Random gen;
     private ArrayList<Nube> arrayNube;
-    private Nube x, y;
+    private Nube x, y, z;
 
     public Game(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
@@ -43,21 +43,12 @@ public class Game extends Escena {
         bitmapsNubes = new ArrayList<>();
         bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds);
         bitmapsNubes.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
-//        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds);
-//        bitmapsNubes.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
-//        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.nubes6);
-//        bitmapsNubes.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
+        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds);
+        bitmapsNubes.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
         bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.nubes6);
         bitmapsNubes.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
-//        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.nubes7);
-//        bitmapsNubes.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
-//        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds);
-//        bitmapsNubes.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
-//        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds);
-//        bitmapsNubes.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
-//        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds);
-//        bitmapsNubes.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
-
+        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.nubes6);
+        bitmapsNubes.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
 
         c1 = new Capa(context, anchoPantalla, altoPantalla, bmFondo);
         c1.setVelocidad(-7);
@@ -66,58 +57,33 @@ public class Game extends Escena {
         c2.setVelocidad(-10);
         c2.setPosY(altoPantalla / 2);
 
-        x = new Nube(context, anchoPantalla, altoPantalla, bitmapsNubes.get(0));
-        y = new Nube(context, anchoPantalla, altoPantalla, bitmapsNubes.get(1));
-
-//        int fin = (int) (Math.random() * 7 + 1);
-//        for (int i = 0; i < fin; i++) {
-//            arrayNube.add(new Nube(context, anchoPantalla, altoPantalla, bitmapsNubes.get((int) (Math.random() * bitmapsNubes.size()))));
-//        }
+        arrayNube = new ArrayList<>();
+        int fin = (int) (Math.random() * 7 + 1);
+        Log.i("nubes",fin+"");
+        for (int i = 0; i < fin; i++) {
+            arrayNube.add(new Nube(context, anchoPantalla, altoPantalla, bitmapsNubes));
+        }
 
     }
 
     public void actualizarFisica() {
         c1.mover();
         c2.mover();
-        x.mover();
-        y.mover();
-//        for (int i = 0; i < arrayNube.size(); i++) {
-//            arrayNube.get(i).mover();
-//        }
 
-//        fondo[0].mover(10);
-//        fondo[1].mover(10);
-////        fondo[2].mover(10);
-//
-//        if (fondo[0].direccion == -1) {
-//
-//            if (fondo[0].posicion.x + fondo[0].imagen.getWidth() < 0) {
-//                fondo[0].posicion.x = fondo[0].posicion.x + fondo[0].imagen.getWidth() + fondo[1].imagen.getWidth();
-//            }
-//            if (fondo[1].posicion.x + fondo[1].imagen.getWidth() < 0) {
-//                fondo[1].posicion.x = fondo[1].posicion.x + fondo[1].imagen.getWidth() + fondo[0].imagen.getWidth();
-//            }
-//        } else if (fondo[0].direccion == 1) {
-//            if (fondo[0].posicion.x > anchoPantalla) {
-//                fondo[0].posicion.x = fondo[0].posicion.x - fondo[1].imagen.getWidth();
-//            }
-//            if (fondo[1].posicion.x > anchoPantalla) {
-//                fondo[1].posicion.x = fondo[1].posicion.x - fondo[0].imagen.getWidth();
-//            }
-//        }
-
+        for (int i = 0; i < arrayNube.size(); i++) {
+            arrayNube.get(i).mover();
+        }
     }
 
     public void dibujar(Canvas c) {
         try {
             c1.dibujar(c);
             c2.dibujar(c);
-            x.dibujar(c);
-            y.dibujar(c);
-//            for (int i = 0; i < bitmapsNubes.size(); i++) {
-//                arrayNube.get(i).dibujar(c);
-//                Log.i("AAAA", arrayNube.get(i).getPosX() + "--" + arrayNube.get(i).getPosY());
-//            }
+
+            for (int i = 0; i < bitmapsNubes.size(); i++) {
+                arrayNube.get(i).dibujar(c);
+                Log.i(arrayNube.get(i) + "", arrayNube.get(i).getPosX() + "--" + arrayNube.get(i).getPosY());
+            }
 
 
             super.dibujar(c);
