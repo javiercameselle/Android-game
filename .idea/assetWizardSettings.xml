@@ -34,7 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="76" />
+                                                <entry key="scalingPercent" value="87" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -45,7 +45,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundLayerName" value="ic_launcher_background" />
-                                      <entry key="foregroundImage" value="D:\came\Dropbox\Ciclo DAM\Segundo\Programacion multimedia y dispositivos moviles\Recursos\iconoApp.ico" />
+                                      <entry key="foregroundImage" value="D:\came\Dropbox\Ciclo DAM\Segundo\Programacion multimedia y dispositivos moviles\Proyecto\app\src\main\iconapp.png" />
                                       <entry key="foregroundLayerName" value="ic_launcher_foreground" />
                                       <entry key="outputName" value="icon" />
                                     </map>

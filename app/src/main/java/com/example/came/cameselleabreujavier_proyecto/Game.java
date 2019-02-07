@@ -15,7 +15,7 @@ public class Game extends Escena {
 
     private ImagenesCapa[] imagenesCapa;
     private Cap c1, c2;
-    private Bitmap bitmapAux, bmReflex;
+    private Bitmap bitmapAux, imgFloor, imgCloud, imgFondo, imgObstacle, imgReflex;
     private ArrayList<Bitmap> bmBackGround, bmFloor, bmClouds, bmObstaculos;
     private Utils u;
     private ArrayList<Cloud> arrayClouds;
@@ -25,48 +25,52 @@ public class Game extends Escena {
         super(context, idEscena, anchoPantalla, altoPantalla);
         u = new Utils(context);
 
+        //fondo
         bmBackGround = new ArrayList<>();
-        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.fondo);
-        bmBackGround.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla, altoPantalla, false));
-//        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.fondo);
-//        bmEspejo = u.espejo(bitmapAux, true);
-        bmBackGround.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla, altoPantalla, false));
+        imgFondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
+        bmBackGround.add(Bitmap.createScaledBitmap(imgFondo, anchoPantalla, altoPantalla, false));
+//        imgReflex = u.espejo(imgFondo, true);
+        bmBackGround.add(Bitmap.createScaledBitmap(imgFondo, anchoPantalla, altoPantalla, false));
 
+        //suelo
         bmFloor = new ArrayList<>();
-        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.ground);
-        bmFloor.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla, altoPantalla, false));
-//        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.ground);
-        bmFloor.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla, altoPantalla, false));
-//
+        imgFloor = BitmapFactory.decodeResource(context.getResources(), R.drawable.suelo);
+        bmFloor.add(Bitmap.createScaledBitmap(imgFloor, anchoPantalla, altoPantalla / 6, false));
+        bmFloor.add(Bitmap.createScaledBitmap(imgFloor, anchoPantalla, altoPantalla / 6, false));
+
+        //nubes
         bmClouds = new ArrayList<>();
-        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds);
-        bmClouds.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
-//        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds);
-        bmClouds.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
-        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.nubes6);
-        bmClouds.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
-//        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.nubes6);
-        bmClouds.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 3, altoPantalla / 5, false));
+        arrayClouds = new ArrayList<>();
+        int fin = (int) (Math.random() * 7 + 1);
+        imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.little_cloud);
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
+        imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_cloud);
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
+
+
+        //obstaculo
+        bmObstaculos = new ArrayList<>();
+        imgObstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo1);
+        bmObstaculos.add(Bitmap.createScaledBitmap(imgObstacle, anchoPantalla / 10, altoPantalla / 8, false));
+        imgObstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo2);
+        bmObstaculos.add(Bitmap.createScaledBitmap(imgObstacle, anchoPantalla / 10, altoPantalla / 8, false));
+        imgObstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo3);
+        bmObstaculos.add(Bitmap.createScaledBitmap(imgObstacle, anchoPantalla / 10, altoPantalla / 8, false));
 
         c1 = new Cap(context, anchoPantalla, altoPantalla, bmBackGround);
         c1.setVelocidad(-7);
 
         c2 = new Cap(context, anchoPantalla, altoPantalla, bmFloor);
-        c2.setVelocidad(-10);
-        c2.setPosY(altoPantalla / 2);
+        c2.setVelocidad(-13);
+        c2.setPosY(altoPantalla * 7 / 8);
+        Log.i("Y SUELO", c2.getPosY() + "");
+        Log.i("Y SUELO", c2.getPosY() + "holaa");
 
-        bmObstaculos = new ArrayList<>();
-        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo1);
-        bmObstaculos.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 8, altoPantalla / 8, false));
-        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo2);
-        bmObstaculos.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 8, altoPantalla / 8, false));
-        bitmapAux = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo3);
-        bmObstaculos.add(Bitmap.createScaledBitmap(bitmapAux, anchoPantalla / 8, altoPantalla / 8, false));
-        obstaculo = new Obstaculo(context, c2.getPosY() + bmObstaculos.get(0).getHeight(), c2.getVelocidad(), anchoPantalla, altoPantalla, bmObstaculos);
+        obstaculo = new Obstaculo(context, c2.getPosY()-bmObstaculos.get(0).getHeight(), c2.getVelocidad(), anchoPantalla, altoPantalla, bmObstaculos);
+        Log.i("xxxxOBSTACULO: ",obstaculo.getPosX()+"  -- "+obstaculo.getPosY());
 
-        arrayClouds = new ArrayList<>();
-        int fin = (int) (Math.random() * 7 + 1);
-        Log.i("nubes", fin + "");
         for (int i = 0; i < fin; i++) {
             arrayClouds.add(new Cloud(context, anchoPantalla, altoPantalla, bmClouds));
         }
@@ -91,9 +95,9 @@ public class Game extends Escena {
 
             for (int i = 0; i < bmClouds.size(); i++) {
                 arrayClouds.get(i).dibujar(c);
-                Log.i(arrayClouds.get(i) + "", arrayClouds.get(i).getPosX() + "--" + arrayClouds.get(i).getPosY());
+//                Log.i(arrayClouds.get(i) + "NUBES", arrayClouds.get(i).getPosX() + "--" + arrayClouds.get(i).getPosY());
             }
-
+            obstaculo.dibujar(c);
 
             super.dibujar(c);
         } catch (Exception e) {

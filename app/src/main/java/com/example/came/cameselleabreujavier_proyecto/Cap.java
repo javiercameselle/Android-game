@@ -37,13 +37,13 @@ public class Cap {
     }
 
     public int getPosY() {
-        return posY;
+        return (int)imgCaps.get(0).posicion.y;
+
     }
 
     public void setPosY(int posY) {
         for (int i = 0; i < imgCaps.size(); i++) {
             imgCaps.get(i).posicion.y = posY;
-
         }
     }
 
@@ -66,7 +66,6 @@ public class Cap {
 
     public void dibujar(Canvas c) {
         for (ImagenesCapa f : imgCaps) {
-            Log.i("TAG", f.posicion.y + "");
             c.drawBitmap(f.imagen, f.posicion.x, f.posicion.y, null);
         }
     }

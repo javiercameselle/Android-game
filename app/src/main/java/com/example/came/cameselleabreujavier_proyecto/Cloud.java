@@ -23,7 +23,7 @@ public class Cloud {
         this.altoPantalla = altoPantalla;
         this.velocidad = (int) (Math.random() * 15 + 7);
         this.posX = (int) (Math.random() * anchoPantalla + anchoPantalla);
-        this.posY = (int) (Math.random() * altoPantalla / 3);
+        this.posY = (int) (Math.random() * altoPantalla / 4);
         this.alfa = (int) (Math.random() * 255 +150);
         this.pNube = new Paint();
         pNube.setAlpha(alfa);
@@ -39,12 +39,12 @@ public class Cloud {
     public void mover() {
 
         if (System.currentTimeMillis() - tiempoActual > tiempoDibujado) {
-            this.posX -= velocidad;
+            this.posX += (velocidad*-1);
             tiempoActual = System.currentTimeMillis();
             if (this.posX + imgCloud.getWidth() < 0) {
                 this.velocidad = (int) (Math.random() * 15 + 5);
                 this.imgCloud = bitmapNubes.get((int) (Math.random() * bitmapNubes.size()));
-                posY = (int) (Math.random() * altoPantalla / 3);
+                posY = (int) (Math.random() * altoPantalla / 4);
                 posX = (int) (Math.random() * anchoPantalla * 3 + anchoPantalla);
             }
         }

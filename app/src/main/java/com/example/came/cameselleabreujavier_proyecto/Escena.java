@@ -2,6 +2,7 @@ package com.example.came.cameselleabreujavier_proyecto;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,18 +11,22 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 public class Escena {
-    Context context;
-    int idEscena;
-    int anchoPantalla, altoPantalla;
+     Context context;
+     int idEscena;
+     int anchoPantalla, altoPantalla;
     Bitmap fondo;
-    Paint pTexto, pTexto2, pBoton, pBoton2;
-    Rect rMenu;
+     Paint pTexto, pTexto2, pBoton, pBoton2;
+     Rect rMenu;
+     Bitmap bmGoBack;
 
     public Escena(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         this.context = context;
         this.idEscena = idEscena;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
+        this.bmGoBack = BitmapFactory.decodeResource(context.getResources(), R.drawable.go_back);
+        this.bmGoBack=Bitmap.createScaledBitmap(bmGoBack, anchoPantalla / 8, altoPantalla / 7, false);
+
         pTexto = new Paint();
         pTexto2 = new Paint();
 
@@ -37,7 +42,8 @@ public class Escena {
         pBoton2 = new Paint();
         pBoton2.setColor(Color.LTGRAY);
 
-        rMenu = new Rect(anchoPantalla - anchoPantalla / 8, 0, anchoPantalla, anchoPantalla / 7);
+
+        rMenu = new Rect(anchoPantalla - anchoPantalla / 8, 0, anchoPantalla, altoPantalla / 7);
 
     }
 
@@ -80,6 +86,7 @@ public class Escena {
     public void dibujar(Canvas c) {
         if (idEscena != 0) {
             c.drawRect(rMenu, pBoton);
+            c.drawBitmap(bmGoBack,anchoPantalla - anchoPantalla / 8,0,null);
         }
     }
 

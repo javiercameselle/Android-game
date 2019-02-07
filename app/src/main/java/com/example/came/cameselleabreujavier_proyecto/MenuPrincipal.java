@@ -9,22 +9,28 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static android.provider.Settings.System.getString;
 
 public class MenuPrincipal extends Escena {
 
     private Rect ayuda, opciones, records, juego;
-    private int ancho, ancho2, alto;
+    private int ancho, ancho2, alto,altoPantalla,anchoPantalla;
     private Bitmap fondo;
+    private ArrayList<Bitmap> fondos;
     private AudioManager audioManager;
     private MediaPlayer mediaPlayer;
     private boolean suena = true;
-
+    private Vibrator vibrator;
+    private Cap capa;
     /**/
     private SoundPool efectos;
     private int sonidoWoosh, sonidoPajaro, sonidoExplosion;
@@ -35,6 +41,12 @@ public class MenuPrincipal extends Escena {
         super(context, idEscena, anchoPantalla, altoPantalla);
         fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mountain);
         fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);
+        fondos=new ArrayList<>();
+        fondos.add(fondo);
+        fondos.add(fondo);
+        capa=new Cap(context,anchoPantalla,altoPantalla,fondos);
+        capa.setVelocidad(-10);
+
         alto = altoPantalla / 7;
         ancho = anchoPantalla / 4;
         ancho2 = anchoPantalla / 10;
@@ -42,6 +54,8 @@ public class MenuPrincipal extends Escena {
         ayuda = new Rect(ancho2, alto * 4, ancho2 * 3, alto * 6);
         opciones = new Rect(ancho2 * 4, alto * 4, ancho2 * 6, alto * 6);
         records = new Rect(ancho2 * 7, alto * 4, ancho2 * 9, alto * 6);
+
+//        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -59,7 +73,7 @@ public class MenuPrincipal extends Escena {
         sonidoPajaro = efectos.load(context, R.raw.pajaro, 1);
         mediaPlayer = MediaPlayer.create(context, R.raw.musica);
         mediaPlayer.setVolume(vol * 5, vol * 5);
-        mediaPlayer.start();
+        mediaPlayer.start();//Hay que colocar un stop al finalizar la app
     }
 
 
@@ -88,11 +102,17 @@ public class MenuPrincipal extends Escena {
                 break;
 
             case MotionEvent.ACTION_UP:// Al levantar el último dedo
-                efectos.play(sonidoPajaro, 8, 8, 1, 0, 1);
+//                efectos.play(sonidoPajaro, 8, 8, 1, 0, 1);
                 suena = false;
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
-                if (pulsa(juego, event)) return 1;
-                else if (pulsa(ayuda, event)) return 2;
+                if (pulsa(juego, event)) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                        vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+//                    } else {
+//                        vibrator.vibrate(200);
+//                    }
+                    return 1;
+                } else if (pulsa(ayuda, event)) return 2;
                 else if (pulsa(records, event)) return 3;
                 else if (pulsa(opciones, event)) return 4;
                 break;
@@ -108,11 +128,13 @@ public class MenuPrincipal extends Escena {
     }
 
     public void actualizarFisica() {
+        capa.mover();
     }
 
     public void dibujar(Canvas c) {
         try {
-            c.drawBitmap(fondo, 0, 0, null);
+            capa.dibujar(c);
+//            c.drawBitmap(fondo, 0, 0, null);
             c.drawRect(juego, pBoton);
             c.drawText(context.getString(R.string.play), juego.centerX(), juego.centerY() + alto / 3, pTexto);
             c.drawRect(ayuda, pBoton2);
@@ -124,7 +146,7 @@ public class MenuPrincipal extends Escena {
 //            c.drawText("MenuPrincipal" + this.idEscena, anchoPantalla / 2, altoPantalla / 5, pTexto);
 //            c.drawText("MenuPrincipal" + this.idEscena, anchoPantalla / 2, altoPantalla / 5 + 10, pTexto2);
         } catch (Exception e) {
-            Log.i("ERROR AL DIBUJAR", e.getLocalizedMessage());
+            Log.e("ERROR AL DIBUJAR", e.getLocalizedMessage());
         }
     }
 

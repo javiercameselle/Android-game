@@ -3,39 +3,45 @@ package com.example.came.cameselleabreujavier_proyecto;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 public class Obstaculo {
 
     private Context context;
-    private int speed, posX, posY, drawTime, screenWidth, screenHeigth;
+    private int speed, posX, posY, drawTime = 10, screenWidth, screenHeigth;
     private Bitmap imgObstacle;
     private ArrayList<Bitmap> obstacles;
     private long tiempoActual = System.currentTimeMillis();
+    private Paint pObst;
+
 
     public Obstaculo(Context context, int posY, int speed, int screenWidth, int screenHeigth, ArrayList<Bitmap> obstacles) {
         this.context = context;
-        this.speed = -10;
+        this.speed = speed;
         this.posX = (int) (Math.random() * screenWidth + screenWidth);
         this.posY = posY;
-        this.drawTime = drawTime;
         this.screenWidth = screenWidth;
         this.screenHeigth = screenHeigth;
         this.obstacles = obstacles;
         this.imgObstacle = this.obstacles.get((int) (Math.random() * obstacles.size()));
+        this.pObst = new Paint();
+        pObst.setAlpha(255);
     }
 
     public void dibujar(Canvas c) {
-        c.drawBitmap(imgObstacle, posX, posY, null);
+        c.drawBitmap(imgObstacle, posX, posY, pObst);
     }
-    public void mover(){
+
+    public void mover() {
         if (System.currentTimeMillis() - tiempoActual > drawTime) {
-            this.posX -= speed;
+            this.posX += speed;
             tiempoActual = System.currentTimeMillis();
             if (this.posX + imgObstacle.getWidth() < 0) {
                 this.imgObstacle = obstacles.get((int) (Math.random() * obstacles.size()));
-                posX = (int) (Math.random() * screenWidth * 3 + screenWidth);
+                posX = (int) (Math.random() /** screenWidth * 3*/ + screenWidth);
             }
         }
     }
@@ -54,6 +60,14 @@ public class Obstaculo {
 
     public void setSpeed(int speed) {
         this.speed = speed;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
     }
 
     public int getPosX() {

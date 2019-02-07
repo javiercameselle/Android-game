@@ -26,7 +26,7 @@ public class Partida extends SurfaceView implements SurfaceHolder.Callback {
         surfaceHolder.addCallback(this);
         hilo = new Hilo();
         setFocusable(true);
-        bitmapFondo = BitmapFactory.decodeResource(getResources(), R.drawable.fondo);
+        bitmapFondo = BitmapFactory.decodeResource(getResources(), R.drawable.background);
         bitmapFondo = Bitmap.createScaledBitmap(bitmapFondo, bitmapFondo.getWidth(), altoPantalla, true);
         imagenesCapa[0] = new ImagenesCapa(0,bitmapFondo, anchoPantalla,1);
         imagenesCapa[1] = new ImagenesCapa(0,bitmapFondo, anchoPantalla,1);
