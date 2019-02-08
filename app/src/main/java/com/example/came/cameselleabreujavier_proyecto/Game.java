@@ -9,46 +9,66 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Game extends Escena {
 
-    private ImagenesCapa[] imagenesCapa;
-    private Cap c1, c2;
-    private Bitmap bitmapAux, imgFloor, imgCloud, imgFondo, imgObstacle, imgReflex;
-    private ArrayList<Bitmap> bmBackGround, bmFloor, bmClouds, bmObstaculos;
+    private Cap backgroundCap, floorCap, buildingsCap;
+    private Bitmap bitmapAux, imgFloor, imgCloud, imgBuildings, imgFondo, imgObstacle, imgReflex;
+    private ArrayList<Bitmap> bmBackGround, bmFloor, bmClouds, bmObstaculos, bmBuildings;
     private Utils u;
-    private ArrayList<Cloud> arrayClouds;
     private Obstaculo obstaculo;
+    private ArrayList<Cloud> arrayClouds;
+    private Personaje p;
+    private Bitmap[] bmDead, bmJump, bmRun, bmColision;
 
     public Game(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
         u = new Utils(context);
 
         //fondo
-        bmBackGround = new ArrayList<>();
-        imgFondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
-        bmBackGround.add(Bitmap.createScaledBitmap(imgFondo, anchoPantalla, altoPantalla, false));
+//        bmBackGround = new ArrayList<>();
+        imgFondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.game_dark_background);
+        imgFondo = Bitmap.createScaledBitmap(imgFondo, anchoPantalla, altoPantalla, false);
+//        bmBackGround.add(imgFondo);
 //        imgReflex = u.espejo(imgFondo, true);
-        bmBackGround.add(Bitmap.createScaledBitmap(imgFondo, anchoPantalla, altoPantalla, false));
+//        bmBackGround.add(Bitmap.createScaledBitmap(imgFondo, anchoPantalla, altoPantalla, false));
+//        backgroundCap = new Cap(context, anchoPantalla, altoPantalla, bmBackGround);
+//        backgroundCap.setVelocidad(-4);
+
+        //buildings
+        bmBuildings = new ArrayList<>();
+        imgBuildings = BitmapFactory.decodeResource(context.getResources(), R.drawable.buildings);
+        imgBuildings = Bitmap.createScaledBitmap(imgBuildings, anchoPantalla, altoPantalla, false);
+        bmBuildings.add(imgBuildings);
+        bmBuildings.add(imgBuildings);
+        buildingsCap = new Cap(context, anchoPantalla, altoPantalla, bmBuildings);
+        buildingsCap.setVelocidad(-6);
 
         //suelo
         bmFloor = new ArrayList<>();
         imgFloor = BitmapFactory.decodeResource(context.getResources(), R.drawable.suelo);
         bmFloor.add(Bitmap.createScaledBitmap(imgFloor, anchoPantalla, altoPantalla / 6, false));
         bmFloor.add(Bitmap.createScaledBitmap(imgFloor, anchoPantalla, altoPantalla / 6, false));
+        floorCap = new Cap(context, anchoPantalla, altoPantalla, bmFloor);
+        floorCap.setVelocidad(-16);
+        floorCap.setPosY(altoPantalla * 7 / 8);
 
         //nubes
         bmClouds = new ArrayList<>();
         arrayClouds = new ArrayList<>();
-        int fin = (int) (Math.random() * 7 + 1);
+        int fin = (int) (Math.random() * 7 + 2);
         imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.little_cloud);
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
         imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_cloud);
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
-
+        imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.alphas_clouds);
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
+        for (int i = 0; i < fin; i++) {
+            arrayClouds.add(new Cloud(context, anchoPantalla, altoPantalla, bmClouds));
+        }
 
         //obstaculo
         bmObstaculos = new ArrayList<>();
@@ -58,47 +78,39 @@ public class Game extends Escena {
         bmObstaculos.add(Bitmap.createScaledBitmap(imgObstacle, anchoPantalla / 10, altoPantalla / 8, false));
         imgObstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo3);
         bmObstaculos.add(Bitmap.createScaledBitmap(imgObstacle, anchoPantalla / 10, altoPantalla / 8, false));
+        obstaculo = new Obstaculo(context, floorCap.getPosY() - bmObstaculos.get(0).getHeight(), floorCap.getVelocidad(), anchoPantalla, altoPantalla, bmObstaculos);
 
-        c1 = new Cap(context, anchoPantalla, altoPantalla, bmBackGround);
-        c1.setVelocidad(-7);
 
-        c2 = new Cap(context, anchoPantalla, altoPantalla, bmFloor);
-        c2.setVelocidad(-13);
-        c2.setPosY(altoPantalla * 7 / 8);
-        Log.i("Y SUELO", c2.getPosY() + "");
-        Log.i("Y SUELO", c2.getPosY() + "holaa");
-
-        obstaculo = new Obstaculo(context, c2.getPosY()-bmObstaculos.get(0).getHeight(), c2.getVelocidad(), anchoPantalla, altoPantalla, bmObstaculos);
-        Log.i("xxxxOBSTACULO: ",obstaculo.getPosX()+"  -- "+obstaculo.getPosY());
-
-        for (int i = 0; i < fin; i++) {
-            arrayClouds.add(new Cloud(context, anchoPantalla, altoPantalla, bmClouds));
-        }
-
+        bmDead = u.getFrames(8, "dead", "pDead", 200);
+        bmJump = u.getFrames(5, "jump", "pJump", 200);
+        bmRun = u.getFrames(5, "run", "pRun", 200);
+        bmColision = u.getFrames(2, "collision", "pCollision", 200);
+        p = new Personaje(bmRun, bmJump, bmColision, bmDead, anchoPantalla, altoPantalla, 0, anchoPantalla / 3, floorCap.getPosY() - bmRun[0].getHeight());
     }
 
     public void actualizarFisica() {
-        c1.mover();
-        c2.mover();
-
-        for (int i = 0; i < arrayClouds.size(); i++) {
-            arrayClouds.get(i).mover();
+//        backgroundCap.mover();
+        buildingsCap.mover();
+        floorCap.mover();
+        for (Cloud cd : arrayClouds) {
+            cd.mover();
         }
-
+//        p.mover();
+        p.cambioFrame();
         obstaculo.mover();
     }
 
     public void dibujar(Canvas c) {
         try {
-            c1.dibujar(c);
-            c2.dibujar(c);
-
-            for (int i = 0; i < bmClouds.size(); i++) {
-                arrayClouds.get(i).dibujar(c);
-//                Log.i(arrayClouds.get(i) + "NUBES", arrayClouds.get(i).getPosX() + "--" + arrayClouds.get(i).getPosY());
+            c.drawBitmap(imgFondo, 0, 0, null);
+//            backgroundCap.dibujar(c);
+            for (Cloud cd : arrayClouds) {
+                cd.dibujar(c);
             }
+            buildingsCap.dibujar(c);
+            floorCap.dibujar(c);
+            p.dibujar(c);
             obstaculo.dibujar(c);
-
             super.dibujar(c);
         } catch (Exception e) {
             Log.i("ERROR AL DIBUJAR", e.getLocalizedMessage());

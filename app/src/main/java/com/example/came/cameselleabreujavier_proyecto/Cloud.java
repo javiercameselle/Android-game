@@ -21,12 +21,12 @@ public class Cloud {
         this.context = context;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
-        this.velocidad = (int) (Math.random() * 15 + 7);
+        this.velocidad = (int) (Math.random() * 8 + 6);
         this.posX = (int) (Math.random() * anchoPantalla + anchoPantalla);
         this.posY = (int) (Math.random() * altoPantalla / 4);
-        this.alfa = (int) (Math.random() * 255 +150);
+        this.alfa = (int) (Math.random() * 255 +175);
         this.pNube = new Paint();
-        pNube.setAlpha(alfa);
+        this.pNube.setAlpha(this.alfa);
         this.bitmapNubes = bitmapNubes;
         this.imgCloud = bitmapNubes.get((int) (Math.random() * bitmapNubes.size()));
     }

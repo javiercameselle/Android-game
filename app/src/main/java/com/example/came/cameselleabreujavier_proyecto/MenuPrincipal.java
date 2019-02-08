@@ -15,17 +15,15 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import static android.provider.Settings.System.getString;
 
 public class MenuPrincipal extends Escena {
 
+    private ArrayList<Cloud> arrayClouds;
     private Rect ayuda, opciones, records, juego;
-    private int ancho, ancho2, alto,altoPantalla,anchoPantalla;
-    private Bitmap fondo;
-    private ArrayList<Bitmap> fondos;
+    private int ancho, ancho2, alto, altoPantalla, anchoPantalla;
+    private Bitmap imgBuildingsShadow, imgFondo, imgCloud;
+    private ArrayList<Bitmap> fondos, bmClouds;
     private AudioManager audioManager;
     private MediaPlayer mediaPlayer;
     private boolean suena = true;
@@ -39,13 +37,35 @@ public class MenuPrincipal extends Escena {
 
     public MenuPrincipal(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mountain);
-        fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);
-        fondos=new ArrayList<>();
-        fondos.add(fondo);
-        fondos.add(fondo);
-        capa=new Cap(context,anchoPantalla,altoPantalla,fondos);
-        capa.setVelocidad(-10);
+
+        imgFondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_background);
+        imgFondo = Bitmap.createScaledBitmap(imgFondo, anchoPantalla, altoPantalla, false);
+
+        imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);
+        imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, anchoPantalla, altoPantalla, false);
+//parallax
+//        fondos = new ArrayList<>();
+//        fondos.add(imgBuildingsShadow);
+//        fondos.add(imgBuildingsShadow);
+//        capa = new Cap(context, anchoPantalla, altoPantalla, fondos);
+//        capa.setVelocidad(-10);
+
+        bmClouds = new ArrayList<>();
+        arrayClouds = new ArrayList<>();
+        int fin = (int) (Math.random() * 7 + 1);
+        imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.little_cloud);
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
+        imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_cloud);
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
+        imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.alphas_clouds);
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
+        for (int i = 0; i < fin; i++) {
+            arrayClouds.add(new Cloud(context, anchoPantalla, altoPantalla, bmClouds));
+        }
+
 
         alto = altoPantalla / 7;
         ancho = anchoPantalla / 4;
@@ -55,7 +75,7 @@ public class MenuPrincipal extends Escena {
         opciones = new Rect(ancho2 * 4, alto * 4, ancho2 * 6, alto * 6);
         records = new Rect(ancho2 * 7, alto * 4, ancho2 * 9, alto * 6);
 
-//        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -73,7 +93,7 @@ public class MenuPrincipal extends Escena {
         sonidoPajaro = efectos.load(context, R.raw.pajaro, 1);
         mediaPlayer = MediaPlayer.create(context, R.raw.musica);
         mediaPlayer.setVolume(vol * 5, vol * 5);
-        mediaPlayer.start();//Hay que colocar un stop al finalizar la app
+//        mediaPlayer.start();//Hay que colocar un stop al finalizar la app
     }
 
 
@@ -103,18 +123,26 @@ public class MenuPrincipal extends Escena {
 
             case MotionEvent.ACTION_UP:// Al levantar el último dedo
 //                efectos.play(sonidoPajaro, 8, 8, 1, 0, 1);
-                suena = false;
+//                suena = false;
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
                 if (pulsa(juego, event)) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                        vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
-//                    } else {
-//                        vibrator.vibrate(200);
-//                    }
+                    mediaPlayer.stop();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else {
+                        vibrator.vibrate(500);
+                    }
                     return 1;
-                } else if (pulsa(ayuda, event)) return 2;
-                else if (pulsa(records, event)) return 3;
-                else if (pulsa(opciones, event)) return 4;
+                } else if (pulsa(ayuda, event)) {
+                    mediaPlayer.stop();
+                    return 2;
+                } else if (pulsa(records, event)) {
+                    mediaPlayer.stop();
+                    return 3;
+                } else if (pulsa(opciones, event)) {
+                    mediaPlayer.stop();
+                    return 4;
+                }
                 break;
 
 
@@ -128,13 +156,21 @@ public class MenuPrincipal extends Escena {
     }
 
     public void actualizarFisica() {
-        capa.mover();
+//        capa.mover();
+        for (Cloud cd : arrayClouds) {
+            cd.mover();
+        }
     }
 
     public void dibujar(Canvas c) {
         try {
-            capa.dibujar(c);
-//            c.drawBitmap(fondo, 0, 0, null);
+//            capa.dibujar(c);
+            c.drawBitmap(imgFondo, 0, 0, null);
+            c.drawBitmap(imgBuildingsShadow, 0, 0, null);
+            for (Cloud cd : arrayClouds) {
+                cd.dibujar(c);
+            }
+
             c.drawRect(juego, pBoton);
             c.drawText(context.getString(R.string.play), juego.centerX(), juego.centerY() + alto / 3, pTexto);
             c.drawRect(ayuda, pBoton2);
