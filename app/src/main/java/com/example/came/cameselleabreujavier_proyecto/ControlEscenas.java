@@ -11,8 +11,8 @@ public class ControlEscenas extends SurfaceView implements SurfaceHolder.Callbac
     private SurfaceHolder surfaceHolder;      // Interfaz abstracta para manejar la superficie de dibujado
     private Context context;                  // Contexto de la aplicación
 
-    private int anchoPantalla = 1;              // Ancho de la pantalla, su valor se actualiza en el método surfaceChanged
-    private int altoPantalla = 1;               // Alto de la pantalla, su valor se actualiza en el método surfaceChanged
+    static int anchoPantalla = 1;              // Ancho de la pantalla, su valor se actualiza en el método surfaceChanged
+    static int altoPantalla = 1;               // Alto de la pantalla, su valor se actualiza en el método surfaceChanged
     private Hilo hilo;                        // Hilo encargado de dibujar y actualizar la física
     private boolean funcionando = false;      // Control del hilo
     private Escena escenaActual;
@@ -46,6 +46,9 @@ public class ControlEscenas extends SurfaceView implements SurfaceHolder.Callbac
                         break;
                     case 4:
                         escenaActual = new Opciones(context, 4, anchoPantalla, altoPantalla);
+                        break;
+                    case 5:
+                        escenaActual = new Creditos(context, 5, anchoPantalla, altoPantalla);
                         break;
                 }
             }

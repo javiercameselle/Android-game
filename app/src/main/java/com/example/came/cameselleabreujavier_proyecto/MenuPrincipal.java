@@ -20,12 +20,11 @@ import java.util.ArrayList;
 public class MenuPrincipal extends Escena {
 
     private ArrayList<Cloud> arrayClouds;
-    private Rect ayuda, opciones, records, juego;
+    private Rect ayuda, opciones, records, juego, creditos;
     private int ancho, ancho2, alto, altoPantalla, anchoPantalla;
-    private Bitmap imgBuildingsShadow, imgFondo, imgCloud;
+    private Bitmap imgBuildingsShadow, imgCloud, imgPlay, imgOptions, imgHelp, imgRecords, imgCréditos;
     private ArrayList<Bitmap> fondos, bmClouds;
     private AudioManager audioManager;
-    private MediaPlayer mediaPlayer;
     private boolean suena = true;
     private Vibrator vibrator;
     private Cap capa;
@@ -38,8 +37,8 @@ public class MenuPrincipal extends Escena {
     public MenuPrincipal(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
 
-        imgFondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_background);
-        imgFondo = Bitmap.createScaledBitmap(imgFondo, anchoPantalla, altoPantalla, false);
+        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_background);
+        fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);
 
         imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);
         imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, anchoPantalla, altoPantalla, false);
@@ -71,14 +70,15 @@ public class MenuPrincipal extends Escena {
         ancho = anchoPantalla / 4;
         ancho2 = anchoPantalla / 10;
         juego = new Rect(ancho, alto, ancho * 3, alto * 3);
+        imgPlay = BitmapFactory.decodeResource(context.getResources(), R.drawable.play);
+        imgPlay = Bitmap.createScaledBitmap(imgPlay, ancho * 3, alto * 3, false);
         ayuda = new Rect(ancho2, alto * 4, ancho2 * 3, alto * 6);
         opciones = new Rect(ancho2 * 4, alto * 4, ancho2 * 6, alto * 6);
         records = new Rect(ancho2 * 7, alto * 4, ancho2 * 9, alto * 6);
+        creditos = new Rect();
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
-        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         if ((android.os.Build.VERSION.SDK_INT) >= 21) {
             SoundPool.Builder spb = new SoundPool.Builder();
@@ -91,9 +91,6 @@ public class MenuPrincipal extends Escena {
         sonidoWoosh = efectos.load(context, R.raw.woosh, 1);
         sonidoExplosion = efectos.load(context, R.raw.explosion, 1);
         sonidoPajaro = efectos.load(context, R.raw.pajaro, 1);
-        mediaPlayer = MediaPlayer.create(context, R.raw.musica);
-        mediaPlayer.setVolume(vol * 5, vol * 5);
-//        mediaPlayer.start();//Hay que colocar un stop al finalizar la app
     }
 
 
@@ -126,7 +123,7 @@ public class MenuPrincipal extends Escena {
 //                suena = false;
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
                 if (pulsa(juego, event)) {
-                    mediaPlayer.stop();
+//                    mediaPlayer.stop();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
                     } else {
@@ -134,13 +131,12 @@ public class MenuPrincipal extends Escena {
                     }
                     return 1;
                 } else if (pulsa(ayuda, event)) {
-                    mediaPlayer.stop();
                     return 2;
                 } else if (pulsa(records, event)) {
-                    mediaPlayer.stop();
                     return 3;
                 } else if (pulsa(opciones, event)) {
-                    mediaPlayer.stop();
+                    return 4;
+                } else if (pulsa(creditos, event)) {
                     return 4;
                 }
                 break;
@@ -165,13 +161,14 @@ public class MenuPrincipal extends Escena {
     public void dibujar(Canvas c) {
         try {
 //            capa.dibujar(c);
-            c.drawBitmap(imgFondo, 0, 0, null);
+            c.drawBitmap(fondo, 0, 0, null);
             c.drawBitmap(imgBuildingsShadow, 0, 0, null);
             for (Cloud cd : arrayClouds) {
                 cd.dibujar(c);
             }
 
             c.drawRect(juego, pBoton);
+            c.drawBitmap(imgPlay, ancho, alto, null);
             c.drawText(context.getString(R.string.play), juego.centerX(), juego.centerY() + alto / 3, pTexto);
             c.drawRect(ayuda, pBoton2);
             c.drawText(context.getString(R.string.help), ayuda.centerX(), ayuda.centerY() + alto / 3, pTexto);

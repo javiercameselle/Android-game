@@ -20,10 +20,12 @@ public class Game extends Escena {
     private ArrayList<Cloud> arrayClouds;
     private Personaje p;
     private Bitmap[] bmDead, bmJump, bmRun, bmColision;
+    private long initialTime;
 
     public Game(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
         u = new Utils(context);
+        initialTime = System.currentTimeMillis();
 
         //fondo
 //        bmBackGround = new ArrayList<>();
@@ -42,7 +44,7 @@ public class Game extends Escena {
         bmBuildings.add(imgBuildings);
         bmBuildings.add(imgBuildings);
         buildingsCap = new Cap(context, anchoPantalla, altoPantalla, bmBuildings);
-        buildingsCap.setVelocidad(-6);
+        buildingsCap.setVelocidad(-u.getDpW(6));
 
         //suelo
         bmFloor = new ArrayList<>();
@@ -50,7 +52,7 @@ public class Game extends Escena {
         bmFloor.add(Bitmap.createScaledBitmap(imgFloor, anchoPantalla, altoPantalla / 6, false));
         bmFloor.add(Bitmap.createScaledBitmap(imgFloor, anchoPantalla, altoPantalla / 6, false));
         floorCap = new Cap(context, anchoPantalla, altoPantalla, bmFloor);
-        floorCap.setVelocidad(-16);
+        floorCap.setVelocidad(-u.getDpW(16));
         floorCap.setPosY(altoPantalla * 7 / 8);
 
         //nubes
@@ -81,11 +83,11 @@ public class Game extends Escena {
         obstaculo = new Obstaculo(context, floorCap.getPosY() - bmObstaculos.get(0).getHeight(), floorCap.getVelocidad(), anchoPantalla, altoPantalla, bmObstaculos);
 
 
-        bmDead = u.getFrames(8, "dead", "pDead", 200);
-        bmJump = u.getFrames(5, "jump", "pJump", 200);
-        bmRun = u.getFrames(5, "run", "pRun", 200);
+        bmDead = u.getFrames(8, "dead", "pDead", anchoPantalla/10);
+        bmJump = u.getFrames(5, "jump", "pJump", anchoPantalla/10);
+        bmRun = u.getFrames(5, "run", "pRun", anchoPantalla/10);
         bmColision = u.getFrames(2, "collision", "pCollision", 200);
-        p = new Personaje(bmRun, bmJump, bmColision, bmDead, anchoPantalla, altoPantalla, 0, anchoPantalla / 3, floorCap.getPosY() - bmRun[0].getHeight());
+        p = new Personaje(context,bmRun, bmJump, bmColision, bmDead, anchoPantalla, altoPantalla, 0, anchoPantalla / 3, floorCap.getPosY() - bmRun[0].getHeight());
     }
 
     public void actualizarFisica() {
@@ -96,6 +98,9 @@ public class Game extends Escena {
             cd.mover();
         }
 //        p.mover();
+        if (p.isJumping()) {
+            p.saltar();
+        }
         p.cambioFrame();
         obstaculo.mover();
     }
@@ -112,6 +117,18 @@ public class Game extends Escena {
             p.dibujar(c);
             obstaculo.dibujar(c);
             super.dibujar(c);
+            if (System.currentTimeMillis() - initialTime > 20000) {//TODO
+                buildingsCap.setVelocidad(buildingsCap.getVelocidad() - u.getDpW(2));
+                floorCap.setVelocidad(floorCap.getVelocidad() - u.getDpW(2));
+                for (Cloud cd : arrayClouds) {
+                    cd.setMinRandom(+2);
+                    cd.setMaxRandom(+2);
+                }
+                obstaculo.setSpeed(floorCap.getVelocidad());
+                p.setFrameTime(p.getFrameTime() - u.getDpW(2));
+                initialTime = System.currentTimeMillis();
+            }
+
         } catch (Exception e) {
             Log.i("ERROR AL DIBUJAR", e.getLocalizedMessage());
         }
@@ -133,7 +150,13 @@ public class Game extends Escena {
             case MotionEvent.ACTION_POINTER_DOWN:  // Segundo y siguientes tocan
                 break;
 
-            case MotionEvent.ACTION_UP:                     // Al levantar el último dedo
+            case MotionEvent.ACTION_UP:// Al levantar el último dedo
+                //salto
+                if (!p.isJumping()) {
+                    p.setJumping(true);
+                    p.setIndex(0);
+                    p.setPulsacionTime();
+                }
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
                 break;
 

@@ -10,10 +10,15 @@ import android.view.MotionEvent;
 
 public class Opciones extends Escena {
 
+    private Bitmap imgBuildingsShadow;
+
     public Opciones(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.wb);
+        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);
         fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);
+
+        imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);
+        imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, anchoPantalla, altoPantalla, false);
     }
 
     public void actualizarFisica() {
@@ -23,6 +28,7 @@ public class Opciones extends Escena {
     public void dibujar(Canvas c) {
         try {
             c.drawBitmap(fondo, 0, 0, null);
+            c.drawBitmap(imgBuildingsShadow, 0, 0, null);
             super.dibujar(c);
         } catch (Exception e) {
             Log.i("ERROR AL DIBUJAR", e.getLocalizedMessage());

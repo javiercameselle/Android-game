@@ -14,17 +14,17 @@ public class Cloud {
     private long tiempoActual = System.currentTimeMillis();
     private Bitmap imgCloud;
     private ArrayList<Bitmap> bitmapNubes;
-    private int altoPantalla, anchoPantalla;
+    private int altoPantalla, anchoPantalla, minRandom=6, maxRandom=9;
     private Paint pNube;
 
     public Cloud(Context context, int anchoPantalla, int altoPantalla, ArrayList<Bitmap> bitmapNubes) {
         this.context = context;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
-        this.velocidad = (int) (Math.random() * 8 + 6);
+        this.velocidad = (int) (Math.random() * maxRandom + minRandom);
         this.posX = (int) (Math.random() * anchoPantalla + anchoPantalla);
         this.posY = (int) (Math.random() * altoPantalla / 4);
-        this.alfa = (int) (Math.random() * 255 +175);
+        this.alfa = (int) (Math.random() * 255 + 175);
         this.pNube = new Paint();
         this.pNube.setAlpha(this.alfa);
         this.bitmapNubes = bitmapNubes;
@@ -39,10 +39,10 @@ public class Cloud {
     public void mover() {
 
         if (System.currentTimeMillis() - tiempoActual > tiempoDibujado) {
-            this.posX += (velocidad*-1);
+            this.posX += (velocidad * -1);
             tiempoActual = System.currentTimeMillis();
             if (this.posX + imgCloud.getWidth() < 0) {
-                this.velocidad = (int) (Math.random() * 15 + 5);
+                this.velocidad = (int) (Math.random() * maxRandom + minRandom);
                 this.imgCloud = bitmapNubes.get((int) (Math.random() * bitmapNubes.size()));
                 posY = (int) (Math.random() * altoPantalla / 4);
                 posX = (int) (Math.random() * anchoPantalla * 3 + anchoPantalla);
@@ -131,5 +131,21 @@ public class Cloud {
 
     public void setAnchoPantalla(int anchoPantalla) {
         this.anchoPantalla = anchoPantalla;
+    }
+
+    public int getMinRandom() {
+        return minRandom;
+    }
+
+    public void setMinRandom(int minRandom) {
+        this.minRandom = minRandom;
+    }
+
+    public int getMaxRandom() {
+        return maxRandom;
+    }
+
+    public void setMaxRandom(int maxRandom) {
+        this.maxRandom = maxRandom;
     }
 }

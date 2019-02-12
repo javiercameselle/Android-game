@@ -8,11 +8,11 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class Records extends Escena {
+public class Creditos extends Escena {
 
     private Bitmap imgBuildingsShadow;
 
-    public Records(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
+    public Creditos(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
         fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);
         fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);

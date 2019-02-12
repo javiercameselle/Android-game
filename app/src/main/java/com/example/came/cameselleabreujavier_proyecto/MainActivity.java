@@ -1,12 +1,17 @@
 package com.example.came.cameselleabreujavier_proyecto;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
 public class MainActivity extends AppCompatActivity {
+    private static MediaPlayer mediaPlayer;
+    private static AudioManager audioManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(opciones);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        mediaPlayer = MediaPlayer.create(this, R.raw.musica);
+        mediaPlayer.setVolume(vol * 5, vol * 5);
+        mediaPlayer.start();//Hay que colocar un stop al finalizar la app
 
         ControlEscenas p = new ControlEscenas(this);
         p.setKeepScreenOn(true);
@@ -42,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(opciones);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mediaPlayer.stop();
     }
 }
 

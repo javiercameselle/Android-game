@@ -3,7 +3,9 @@ package com.example.came.cameselleabreujavier_proyecto;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ public class Obstaculo {
     private ArrayList<Bitmap> obstacles;
     private long tiempoActual = System.currentTimeMillis();
     private Paint pObst;
+    private Paint p;
 
 
     public Obstaculo(Context context, int posY, int speed, int screenWidth, int screenHeigth, ArrayList<Bitmap> obstacles) {
@@ -29,10 +32,15 @@ public class Obstaculo {
         this.imgObstacle = this.obstacles.get((int) (Math.random() * obstacles.size()));
         this.pObst = new Paint();
         pObst.setAlpha(255);
+        p=new Paint();
+        p.setColor(Color.GREEN);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(5);
     }
 
     public void dibujar(Canvas c) {
         c.drawBitmap(imgObstacle, posX, posY, pObst);
+        c.drawRect(new Rect(posX,posY+imgObstacle.getHeight()/4,posX+imgObstacle.getWidth(),posY+imgObstacle.getHeight()),p);
     }
 
     public void mover() {
@@ -41,7 +49,7 @@ public class Obstaculo {
             tiempoActual = System.currentTimeMillis();
             if (this.posX + imgObstacle.getWidth() < 0) {
                 this.imgObstacle = obstacles.get((int) (Math.random() * obstacles.size()));
-                posX = (int) (Math.random() /** screenWidth * 3*/ + screenWidth);
+                posX = (int) (Math.random() * screenWidth * 2 + screenWidth);
             }
         }
     }
