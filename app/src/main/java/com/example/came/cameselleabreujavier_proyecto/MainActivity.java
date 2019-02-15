@@ -10,8 +10,9 @@ import android.view.View;
 import android.view.Window;
 
 public class MainActivity extends AppCompatActivity {
-    private static MediaPlayer mediaPlayer;
-    private static AudioManager audioManager;
+    public static MediaPlayer mediaPlayer;
+    public static AudioManager audioManager;
+    public static boolean withSound=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +28,7 @@ public class MainActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(opciones);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        mediaPlayer = MediaPlayer.create(this, R.raw.musica);
-        mediaPlayer.setVolume(vol * 5, vol * 5);
-        mediaPlayer.start();//Hay que colocar un stop al finalizar la app
+
 
         ControlEscenas p = new ControlEscenas(this);
         p.setKeepScreenOn(true);

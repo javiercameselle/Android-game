@@ -16,8 +16,10 @@ public class Cloud {
     private ArrayList<Bitmap> bitmapNubes;
     private int altoPantalla, anchoPantalla, minRandom=6, maxRandom=9;
     private Paint pNube;
+    private Utils u;
 
     public Cloud(Context context, int anchoPantalla, int altoPantalla, ArrayList<Bitmap> bitmapNubes) {
+        u=new Utils(context);
         this.context = context;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
@@ -39,12 +41,12 @@ public class Cloud {
     public void mover() {
 
         if (System.currentTimeMillis() - tiempoActual > tiempoDibujado) {
-            this.posX += (velocidad * -1);
+            this.posX += u.getDpW(velocidad) * -1;
             tiempoActual = System.currentTimeMillis();
             if (this.posX + imgCloud.getWidth() < 0) {
                 this.velocidad = (int) (Math.random() * maxRandom + minRandom);
                 this.imgCloud = bitmapNubes.get((int) (Math.random() * bitmapNubes.size()));
-                posY = (int) (Math.random() * altoPantalla / 4);
+                posY = (int) (Math.random() * altoPantalla / 4-altoPantalla/2);
                 posX = (int) (Math.random() * anchoPantalla * 3 + anchoPantalla);
             }
         }

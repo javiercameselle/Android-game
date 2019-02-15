@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -19,6 +18,8 @@ public class Obstaculo {
     private long tiempoActual = System.currentTimeMillis();
     private Paint pObst;
     private Paint p;
+    public Rect rectObstacle;
+    private boolean collisionable = true;
 
 
     public Obstaculo(Context context, int posY, int speed, int screenWidth, int screenHeigth, ArrayList<Bitmap> obstacles) {
@@ -32,7 +33,7 @@ public class Obstaculo {
         this.imgObstacle = this.obstacles.get((int) (Math.random() * obstacles.size()));
         this.pObst = new Paint();
         pObst.setAlpha(255);
-        p=new Paint();
+        p = new Paint();
         p.setColor(Color.GREEN);
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(5);
@@ -40,10 +41,11 @@ public class Obstaculo {
 
     public void dibujar(Canvas c) {
         c.drawBitmap(imgObstacle, posX, posY, pObst);
-        c.drawRect(new Rect(posX,posY+imgObstacle.getHeight()/4,posX+imgObstacle.getWidth(),posY+imgObstacle.getHeight()),p);
+//        c.drawRect(rectObstacle, p);
     }
 
     public void mover() {
+        rectObstacle = new Rect(posX + imgObstacle.getWidth() / 5, posY + imgObstacle.getHeight() / 5, posX + imgObstacle.getWidth() * 4 / 5, posY + imgObstacle.getHeight());
         if (System.currentTimeMillis() - tiempoActual > drawTime) {
             this.posX += speed;
             tiempoActual = System.currentTimeMillis();
@@ -133,4 +135,15 @@ public class Obstaculo {
     public void setTiempoActual(long tiempoActual) {
         this.tiempoActual = tiempoActual;
     }
+
+    public boolean isCollisionable() {
+        return collisionable;
+    }
+
+    public void setCollisionable(boolean collisionable) {
+        this.collisionable = collisionable;
+    }
+
+
+
 }

@@ -32,7 +32,7 @@ public class Escena {
 
         pTexto.setColor(Color.RED);
         pTexto.setTextAlign(Paint.Align.CENTER);
-        pTexto.setTextSize((int) (altoPantalla / 10));
+        pTexto.setTextSize((int) (altoPantalla / 12));
         pTexto2.setColor(Color.GREEN);
         pTexto2.setTextAlign(Paint.Align.CENTER);
         pTexto2.setTextSize(altoPantalla / 5);
@@ -85,7 +85,7 @@ public class Escena {
 
     public void dibujar(Canvas c) {
         if (idEscena != 0) {
-            c.drawRect(rMenu, pBoton);
+//            c.drawRect(rMenu, pBoton);
             c.drawBitmap(bmGoBack,anchoPantalla - anchoPantalla / 8,0,null);
         }
     }

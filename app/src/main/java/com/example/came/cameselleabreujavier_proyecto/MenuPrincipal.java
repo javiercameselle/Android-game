@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -17,17 +19,21 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.mediaPlayer;
+
 public class MenuPrincipal extends Escena {
 
+    private Paint p;
     private ArrayList<Cloud> arrayClouds;
     private Rect ayuda, opciones, records, juego, creditos;
     private int ancho, ancho2, alto, altoPantalla, anchoPantalla;
-    private Bitmap imgBuildingsShadow, imgCloud, imgPlay, imgOptions, imgHelp, imgRecords, imgCréditos;
+    private Bitmap imgBuildingsShadow, imgCloud, imgPlay, imgOptions, imgHelp, imgRecords, imgCréditos, imgCréditos2;
     private ArrayList<Bitmap> fondos, bmClouds;
     private AudioManager audioManager;
     private boolean suena = true;
     private Vibrator vibrator;
     private Cap capa;
+    public boolean canVibrate;
     /**/
     private SoundPool efectos;
     private int sonidoWoosh, sonidoPajaro, sonidoExplosion;
@@ -65,20 +71,44 @@ public class MenuPrincipal extends Escena {
             arrayClouds.add(new Cloud(context, anchoPantalla, altoPantalla, bmClouds));
         }
 
+        p = new Paint();
+        p.setAlpha(50);
+        p.setColor(Color.BLUE);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(1);
 
         alto = altoPantalla / 7;
         ancho = anchoPantalla / 4;
         ancho2 = anchoPantalla / 10;
-        juego = new Rect(ancho, alto, ancho * 3, alto * 3);
+
+//            ayuda = new Rect(ancho, alto * 6, ancho * 2, alto * 7);
+//            opciones = new Rect(ancho2 * 4, alto * 4, ancho2 * 6, alto * 6);
+//            records = new Rect(ancho2 * 7, alto * 4, ancho2 * 9, alto * 6);
+//            creditos = new Rect(ancho2, alto * 4, ancho2 * 3, alto * 6);
+
+        juego = new Rect(ancho2 * 3, alto, ancho2 * 7, alto * 3);
         imgPlay = BitmapFactory.decodeResource(context.getResources(), R.drawable.play);
-        imgPlay = Bitmap.createScaledBitmap(imgPlay, ancho * 3, alto * 3, false);
-        ayuda = new Rect(ancho2, alto * 4, ancho2 * 3, alto * 6);
+        imgPlay = Bitmap.createScaledBitmap(imgPlay, anchoPantalla / 4, altoPantalla / 4, false);
+        ayuda = new Rect(ancho2 * 9, alto, ancho2 * 10, alto * 2);
+        imgHelp = BitmapFactory.decodeResource(context.getResources(), R.drawable.help);
+        imgHelp = Bitmap.createScaledBitmap(imgHelp, anchoPantalla / 10, altoPantalla / 8, false);
         opciones = new Rect(ancho2 * 4, alto * 4, ancho2 * 6, alto * 6);
+        imgOptions = BitmapFactory.decodeResource(context.getResources(), R.drawable.options);
+        imgOptions = Bitmap.createScaledBitmap(imgOptions, anchoPantalla / 8, altoPantalla / 6, false);
         records = new Rect(ancho2 * 7, alto * 4, ancho2 * 9, alto * 6);
-        creditos = new Rect();
+        imgRecords = BitmapFactory.decodeResource(context.getResources(), R.drawable.trophy_cup);
+        imgRecords = Bitmap.createScaledBitmap(imgRecords, anchoPantalla / 8, altoPantalla / 6, false);
+        creditos = new Rect(ancho2, alto * 4, ancho2 * 3, alto * 6);
+        imgCréditos = BitmapFactory.decodeResource(context.getResources(), R.drawable.team_idea);
+        imgCréditos = Bitmap.createScaledBitmap(imgCréditos, anchoPantalla / 8, altoPantalla / 6, false);
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        mediaPlayer = MediaPlayer.create(context, R.raw.musica);
+        mediaPlayer.setVolume(50, 50);
+        mediaPlayer.start();
 
         if ((android.os.Build.VERSION.SDK_INT) >= 21) {
             SoundPool.Builder spb = new SoundPool.Builder();
@@ -108,10 +138,7 @@ public class MenuPrincipal extends Escena {
         switch (accion) {
             case MotionEvent.ACTION_DOWN:// Primer dedo 0
                 try {
-//                    if (!suena)
-//                        mediaPlayer.prepare();
-//                    mediaPlayer.start();
-//                    mediaPlayer.stop();
+//
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -119,25 +146,29 @@ public class MenuPrincipal extends Escena {
                 break;
 
             case MotionEvent.ACTION_UP:// Al levantar el último dedo
-//                efectos.play(sonidoPajaro, 8, 8, 1, 0, 1);
-//                suena = false;
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
                 if (pulsa(juego, event)) {
-//                    mediaPlayer.stop();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
-                    } else {
-                        vibrator.vibrate(500);
+                    mediaPlayer.stop();
+                    if (canVibrate) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+                        } else {
+                            vibrator.vibrate(500);
+                        }
                     }
                     return 1;
                 } else if (pulsa(ayuda, event)) {
+                    mediaPlayer.stop();
                     return 2;
                 } else if (pulsa(records, event)) {
+                    mediaPlayer.stop();
                     return 3;
                 } else if (pulsa(opciones, event)) {
+                    mediaPlayer.stop();
                     return 4;
                 } else if (pulsa(creditos, event)) {
-                    return 4;
+                    mediaPlayer.stop();
+                    return 5;
                 }
                 break;
 
@@ -167,17 +198,21 @@ public class MenuPrincipal extends Escena {
                 cd.dibujar(c);
             }
 
-            c.drawRect(juego, pBoton);
-            c.drawBitmap(imgPlay, ancho, alto, null);
-            c.drawText(context.getString(R.string.play), juego.centerX(), juego.centerY() + alto / 3, pTexto);
-            c.drawRect(ayuda, pBoton2);
-            c.drawText(context.getString(R.string.help), ayuda.centerX(), ayuda.centerY() + alto / 3, pTexto);
-            c.drawRect(records, pBoton2);
-            c.drawText(context.getString(R.string.records), records.centerX(), records.centerY() + alto / 3, pTexto);
-            c.drawRect(opciones, pBoton2);
-            c.drawText(context.getString(R.string.options), opciones.centerX(), opciones.centerY() + alto / 3, pTexto);
-//            c.drawText("MenuPrincipal" + this.idEscena, anchoPantalla / 2, altoPantalla / 5, pTexto);
-//            c.drawText("MenuPrincipal" + this.idEscena, anchoPantalla / 2, altoPantalla / 5 + 10, pTexto2);
+//            c.drawRect(juego, p);
+            c.drawBitmap(imgPlay, juego.centerX() - imgPlay.getWidth() / 2, juego.centerY() - imgPlay.getHeight() / 2, null);
+//            c.drawRect(ayuda,p);
+            c.drawBitmap(imgHelp, ayuda.centerX() - imgHelp.getWidth() / 2, ayuda.centerY() - imgHelp.getHeight() / 2, null);
+//            c.drawText(context.getString(R.string.play), juego.centerX(), juego.centerY() + alto / 3, pTexto);
+//            c.drawRect(creditos, p);
+//            c.drawBitmap(imgCréditos2, creditos.centerX() - imgCréditos.getWidth() / 2, creditos.centerY() - imgCréditos.getHeight() / 2, null);
+            c.drawBitmap(imgCréditos, creditos.centerX() - imgCréditos.getWidth() / 2, creditos.centerY() - imgCréditos.getHeight() / 2, null);
+//            c.drawText(context.getString(R.string.credits), creditos.centerX(), creditos.centerY() + alto / 3, pTexto);
+//            c.drawRect(records, p);
+            c.drawBitmap(imgRecords, records.centerX() - imgRecords.getWidth() / 2, records.centerY() - imgRecords.getHeight() / 2, null);
+//            c.drawText(context.getString(R.string.records), records.centerX(), records.centerY() + alto / 3, pTexto);
+//            c.drawRect(opciones, p);
+            c.drawBitmap(imgOptions, opciones.centerX() - imgOptions.getWidth() / 2, opciones.centerY() - imgOptions.getHeight() / 2, null);
+//            c.drawText(context.getString(R.string.options), opciones.centerX(), opciones.centerY() + alto / 3, pTexto);
         } catch (Exception e) {
             Log.e("ERROR AL DIBUJAR", e.getLocalizedMessage());
         }

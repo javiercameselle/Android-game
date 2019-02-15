@@ -72,12 +72,20 @@ public class Utils {
 
     // 1920x1280
     public int getDpW(int pixels) {
-        return (int) ((pixels / 19.20) * ControlEscenas.anchoPantalla) / 100;
+        int x = (int) ((pixels / 19.20) * ControlEscenas.anchoPantalla) / 100;
+        if (x == 0) {   //comprobación para pantallas pequeñas( ej.u.getDpW(2)=0)
+            return 1;
+        }
+        return x;
     }
 
     // 1920x1280
     public int getDpH(int pixels) {
-        return (int) ((pixels / 10.80) * ControlEscenas.altoPantalla) / 100;
+        int y = (int) ((pixels / 10.80) * ControlEscenas.altoPantalla) / 100;
+        if (y == 0) {   ////comprobación para pantallas pequeñas( ej.u.getDpH(2)=0)
+            return 1;
+        }
+        return y;
     }
 
     public Bitmap espejo(Bitmap imagen, Boolean horizontal) {

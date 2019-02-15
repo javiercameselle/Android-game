@@ -5,4 +5,8 @@
     <string name="help">Ayuda</string>
     <string name="records">Récords</string>
     <string name="options">Opciones</string>
+    <string name="credits">Créditos</string>
+    <string name="sound">Sonido</string>
+    <string name="vibration">Vibración</string>
+    <string name="distance">Distancia</string>
 </resources>

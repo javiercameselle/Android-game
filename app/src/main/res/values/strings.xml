@@ -4,4 +4,8 @@
     <string name="help">Help</string>
     <string name="records">Records</string>
     <string name="options">Options</string>
+    <string name="credits">Credits</string>
+    <string name="sound">Sound</string>
+    <string name="vibration">Vibration</string>
+    <string name="distance">Distance</string>
 </resources>

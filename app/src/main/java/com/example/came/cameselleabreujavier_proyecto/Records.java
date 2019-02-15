@@ -14,7 +14,7 @@ public class Records extends Escena {
 
     public Records(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);
+        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_background);
         fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);
 
         imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Game extends Escena {
 
     private Cap backgroundCap, floorCap, buildingsCap;
-    private Bitmap bitmapAux, imgFloor, imgCloud, imgBuildings, imgFondo, imgObstacle, imgReflex;
+    private Bitmap bitmapAux, imgFloor, imgCloud, imgBuildings, imgFondo, imgObstacle, imgGameLost;
     private ArrayList<Bitmap> bmBackGround, bmFloor, bmClouds, bmObstaculos, bmBuildings;
     private Utils u;
     private Obstaculo obstaculo;
@@ -21,11 +21,16 @@ public class Game extends Escena {
     private Personaje p;
     private Bitmap[] bmDead, bmJump, bmRun, bmColision;
     private long initialTime;
+    private boolean end;
+
 
     public Game(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
         u = new Utils(context);
+        this.end = false;
         initialTime = System.currentTimeMillis();
+        imgGameLost = BitmapFactory.decodeResource(context.getResources(), R.drawable.game_over);
+        imgGameLost = Bitmap.createScaledBitmap(imgGameLost, anchoPantalla / 2, anchoPantalla / 2, false);
 
         //fondo
 //        bmBackGround = new ArrayList<>();
@@ -83,26 +88,48 @@ public class Game extends Escena {
         obstaculo = new Obstaculo(context, floorCap.getPosY() - bmObstaculos.get(0).getHeight(), floorCap.getVelocidad(), anchoPantalla, altoPantalla, bmObstaculos);
 
 
-        bmDead = u.getFrames(8, "dead", "pDead", anchoPantalla/10);
-        bmJump = u.getFrames(5, "jump", "pJump", anchoPantalla/10);
-        bmRun = u.getFrames(5, "run", "pRun", anchoPantalla/10);
+        bmDead = u.getFrames(8, "dead", "pDead", anchoPantalla / 10);
+        bmJump = u.getFrames(5, "jump", "pJump", anchoPantalla / 10);
+        bmRun = u.getFrames(5, "run", "pRun", anchoPantalla / 10);
         bmColision = u.getFrames(2, "collision", "pCollision", 200);
-        p = new Personaje(context,bmRun, bmJump, bmColision, bmDead, anchoPantalla, altoPantalla, 0, anchoPantalla / 3, floorCap.getPosY() - bmRun[0].getHeight());
+        p = new Personaje(context, bmRun, bmJump, bmColision, bmDead, anchoPantalla, altoPantalla, 0, anchoPantalla / 3, floorCap.getPosY() - bmRun[0].getHeight());
+
+
     }
 
     public void actualizarFisica() {
-//        backgroundCap.mover();
-        buildingsCap.mover();
-        floorCap.mover();
-        for (Cloud cd : arrayClouds) {
-            cd.mover();
+        if (!end) {
+            //        backgroundCap.mover();
+            buildingsCap.mover();
+            floorCap.mover();
+            for (Cloud cd : arrayClouds) {
+                cd.mover();
+            }
+            obstaculo.mover();
+//            p.mover();
+            if (p.isJumping()) {
+                p.saltar();
+            }
+            p.cambioFrame();
+
+//            Log.i("LIVES ", (p.rectPersonaje) + "");
+//            Log.i("LIVES ", (obstaculo.rectObstacle) + "");
+            if (p.rectPersonaje.intersect(obstaculo.rectObstacle) && obstaculo.isCollisionable()) {
+                obstaculo.setCollisionable(false);
+                p.setBroke(true);
+                p.setLives(p.getLives() - 1);
+                if (p.getLives() == 0) {
+                    end = true;
+                    saveGame(p.getMetres());
+                    p.setBroke(false);
+                }
+            }
+
+            if (p.getPosX() > obstaculo.getPosX() + obstaculo.getImgObstacle().getWidth()) {
+                obstaculo.setCollisionable(true);
+                p.setBroke(false);
+            }
         }
-//        p.mover();
-        if (p.isJumping()) {
-            p.saltar();
-        }
-        p.cambioFrame();
-        obstaculo.mover();
     }
 
     public void dibujar(Canvas c) {
@@ -114,10 +141,10 @@ public class Game extends Escena {
             }
             buildingsCap.dibujar(c);
             floorCap.dibujar(c);
-            p.dibujar(c);
             obstaculo.dibujar(c);
+            p.dibujar(c);
             super.dibujar(c);
-            if (System.currentTimeMillis() - initialTime > 20000) {//TODO
+            if (System.currentTimeMillis() - initialTime > 20000) {
                 buildingsCap.setVelocidad(buildingsCap.getVelocidad() - u.getDpW(2));
                 floorCap.setVelocidad(floorCap.getVelocidad() - u.getDpW(2));
                 for (Cloud cd : arrayClouds) {
@@ -128,7 +155,9 @@ public class Game extends Escena {
                 p.setFrameTime(p.getFrameTime() - u.getDpW(2));
                 initialTime = System.currentTimeMillis();
             }
-
+            if (end) {
+                c.drawBitmap(imgGameLost, anchoPantalla / 2 - imgGameLost.getWidth() / 2, altoPantalla / 2 - imgGameLost.getHeight() / 2, null);
+            }
         } catch (Exception e) {
             Log.i("ERROR AL DIBUJAR", e.getLocalizedMessage());
         }
@@ -173,6 +202,10 @@ public class Game extends Escena {
             return idPadre;
         }
         return idEscena;
+    }
+
+    public void saveGame(int metres){
+
     }
 
 }

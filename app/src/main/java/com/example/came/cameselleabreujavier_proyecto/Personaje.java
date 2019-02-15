@@ -2,23 +2,29 @@ package com.example.came.cameselleabreujavier_proyecto;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 
 public class Personaje {
-    private Bitmap[] bmRun, bmJump, bmCollision, bmDead;
-    private int posX, posY, initialPosY, speed, drawTime = 50, frameTime = 100, jumpTime = 200, index = 0, screenWidth, screenHeight;
+
+    private Context context;
+    private Bitmap bmAux;
+    private Bitmap[] bmLives, bmRun, bmJump, bmCollision, bmDead;
+    private int lives, posX, posY, initialPosY, speed, drawTime = 50, frameTime = 100, jumpTime = 200, index = 0, screenWidth, screenHeight, metres;
     private long actualTime = System.currentTimeMillis(), pulsacionTime;
     private boolean jumping = false, dead = false, collision = false;
-    private Rect r;
-    private Paint p;
-    Utils u;
+    public Rect rectPersonaje;
+    private Paint p, pText;
+    private Utils u;
+    private boolean broke = false;
 
     public Personaje(Context context, Bitmap[] bmRun, Bitmap[] bmJump, Bitmap[] bmCollision, Bitmap[] bmDead, int anchoPantalla, int altoPantalla, int speed, int posX, int posY) {
+        this.context = context;
         u = new Utils(context);
+        this.lives = 3;
         this.screenWidth = anchoPantalla;
         this.screenHeight = altoPantalla;
         this.bmRun = bmRun;
@@ -28,37 +34,38 @@ public class Personaje {
         this.posX = posX;
         this.posY = posY;
         this.initialPosY = posY;
+        bmLives = u.getFrames(4, "lives", "lives", u.getDpH(300));
         p = new Paint();
-        p.setColor(Color.RED);
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(5);
+        pText = new Paint();
+        pText.setTextSize(u.getDpW(100));
+        pText.setColor(Color.WHITE);
     }
 
     public void mover() {
-//        if (System.currentTimeMillis() - actualTime > drawTime) {
-//            actualTime = System.currentTimeMillis();
-//        }
     }
 
     public void saltar() {
-            if (System.currentTimeMillis() < (pulsacionTime + 700)) {
-                posY -= u.getDpH(10);
-            } else {
-                posY += u.getDpH(10);
-            }
-            if (initialPosY == posY) {
-                jumping = !jumping;
-                index = 0;
-            }
-//            Log.i("PosY", posY + "");
+        if (System.currentTimeMillis() < (pulsacionTime + 700)) {
+            posY -= u.getDpH(10);
+        } else {
+            posY += u.getDpH(10);
+        }
+        if (initialPosY == posY) {
+            jumping = !jumping;
+            index = 0;
+        }
     }
 
     public void cambioFrame() {
         if (System.currentTimeMillis() - actualTime > frameTime) {
             if (jumping) {
+                rectPersonaje = new Rect(posX + bmJump[index].getWidth() / 4, posY + bmJump[index].getHeight() / 2,
+                        posX + bmJump[index].getWidth() * 2 / 3, posY + bmJump[index].getHeight());
                 if (index < bmJump.length - 1)
                     index++;
             } else {
+                rectPersonaje = new Rect(posX + bmRun[index].getWidth() / 4, posY + bmRun[index].getHeight() / 2,
+                        posX + bmRun[index].getWidth() * 2 / 3, posY + bmRun[index].getHeight());
                 index++;
                 if (index == bmRun.length) index = 0;
             }
@@ -67,16 +74,20 @@ public class Personaje {
     }
 
     public void dibujar(Canvas c) {
+        setMetres(getMetres()+1);
+        c.drawBitmap(bmLives[lives], u.getDpW(20), u.getDpH(10), null);
+        c.drawText(context.getString(R.string.distance) + ": " + metres + " m", u.getDpW(screenWidth) / 3, u.getDpH(100), pText);
+        if (isBroke()) {
+            p.setAlpha((int) (Math.random() * 255 + 100));
+        } else {
+            p.setAlpha(255);
+        }
         if (!jumping) {
-            c.drawBitmap(bmRun[index], posX, posY, null);
-            c.drawRect(new Rect(posX + bmRun[index].getWidth() / 4, posY + bmRun[index].getHeight() / 2,
-                            posX + bmRun[index].getWidth() * 2 / 3, posY + bmRun[index].getHeight())
-                    , p);
+            c.drawBitmap(bmRun[index], posX, posY, p);
+//            c.drawRect(rectPersonaje, p);
         } else if (jumping) {
-            c.drawBitmap(bmJump[index], posX, posY, null);
-            c.drawRect(new Rect(posX + bmJump[index].getWidth() / 4, posY + bmJump[index].getHeight() / 2,
-                            posX + bmJump[index].getWidth() * 2 / 3, posY + bmJump[index].getHeight())
-                    , p);
+            c.drawBitmap(bmJump[index], posX, posY, p);
+//            c.drawRect(rectPersonaje, p);
         }
     }
 
@@ -134,5 +145,29 @@ public class Personaje {
 
     public void setFrameTime(int frameTime) {
         this.frameTime = frameTime;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public boolean isBroke() {
+        return broke;
+    }
+
+    public void setBroke(boolean broke) {
+        this.broke = broke;
+    }
+
+    public int getMetres() {
+        return metres;
+    }
+
+    public void setMetres(int metres) {
+        this.metres = metres;
     }
 }

@@ -4,21 +4,54 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.audioManager;
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.mediaPlayer;
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
+
 public class Opciones extends Escena {
 
-    private Bitmap imgBuildingsShadow;
+    private Bitmap imgBuildingsShadow, imgSoundOn, imgSoundOff;
+    private Rect rSonido, rVibration;
+    private Paint pText, pBoton;
+    Utils u;
+    private int widthAux, heightAux;
 
     public Opciones(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);
+        u = new Utils(context);
+        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_background);
         fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);
 
         imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);
         imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, anchoPantalla, altoPantalla, false);
+
+        imgSoundOn = BitmapFactory.decodeResource(context.getResources(), R.drawable.sound_on);
+        imgSoundOn = Bitmap.createScaledBitmap(imgSoundOn, widthAux * 2, heightAux * 2, false);
+
+        imgSoundOff = BitmapFactory.decodeResource(context.getResources(), R.drawable.sound_off);
+        imgSoundOff = Bitmap.createScaledBitmap(imgSoundOff, widthAux * 2, heightAux * 2, false);
+
+        widthAux = anchoPantalla / 9;
+        heightAux = altoPantalla / 9;
+
+        pText = new Paint();
+        pText.setColor(Color.WHITE);
+        pText.setTextSize(u.getDpW(200));
+
+        pBoton = new Paint();
+//        pBoton.setAlpha(50);
+        pBoton.setColor(Color.RED);
+        pBoton.setStyle(Paint.Style.STROKE);
+        pBoton.setStrokeWidth(5);
+
+        rSonido = new Rect(widthAux * 5, heightAux * 2, widthAux * 7, heightAux * 4);
+        rVibration = new Rect(widthAux * 5, heightAux * 5, widthAux * 7, heightAux * 7);
     }
 
     public void actualizarFisica() {
@@ -29,6 +62,18 @@ public class Opciones extends Escena {
         try {
             c.drawBitmap(fondo, 0, 0, null);
             c.drawBitmap(imgBuildingsShadow, 0, 0, null);
+            c.drawText(context.getString(R.string.sound), widthAux * 2, heightAux * 3, pText);
+            c.drawRect(rSonido, pBoton);
+            if (withSound) {
+                c.drawBitmap(imgSoundOn, rSonido.centerX() - imgSoundOn.getWidth() / 2, rSonido.centerY() - imgSoundOn.getHeight() / 2, null);
+                mediaPlayer.setVolume(50,50);
+            } else {
+                c.drawBitmap(imgSoundOff, rSonido.centerX() - imgSoundOff.getWidth() / 2, rSonido.centerY() - imgSoundOff.getHeight() / 2, null);
+                mediaPlayer.setVolume(0,0);
+            }
+            c.drawText(context.getString(R.string.vibration), widthAux, heightAux * 6, pText);
+            c.drawRect(rVibration, pBoton);
+
             super.dibujar(c);
         } catch (Exception e) {
             Log.i("ERROR AL DIBUJAR", e.getLocalizedMessage());
@@ -52,6 +97,8 @@ public class Opciones extends Escena {
                 break;
 
             case MotionEvent.ACTION_UP:                     // Al levantar el último dedo
+
+
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
                 break;
 
