@@ -5,10 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
+
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withVibration;
 
 public class Game extends Escena {
 
@@ -16,19 +21,22 @@ public class Game extends Escena {
     private Bitmap bitmapAux, imgFloor, imgCloud, imgBuildings, imgFondo, imgObstacle, imgGameLost;
     private ArrayList<Bitmap> bmBackGround, bmFloor, bmClouds, bmObstaculos, bmBuildings;
     private Utils u;
-    private Obstaculo obstaculo;
+    private Obstaculo obstaculo,obstaculo_;
     private ArrayList<Cloud> arrayClouds;
     private Personaje p;
     private Bitmap[] bmDead, bmJump, bmRun, bmColision;
-    private long initialTime;
-    private boolean end;
+    private long difTime;
+    private boolean endRun;
+    private static boolean endGame;
+    private Vibrator vibrator;
 
 
     public Game(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
         u = new Utils(context);
-        this.end = false;
-        initialTime = System.currentTimeMillis();
+        this.endRun = false;
+        this.endGame=false;
+        difTime = System.currentTimeMillis();
         imgGameLost = BitmapFactory.decodeResource(context.getResources(), R.drawable.game_over);
         imgGameLost = Bitmap.createScaledBitmap(imgGameLost, anchoPantalla / 2, anchoPantalla / 2, false);
 
@@ -70,7 +78,7 @@ public class Game extends Escena {
         imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_cloud);
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
-        imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.alphas_clouds);
+        imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds_withalpha);
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
         for (int i = 0; i < fin; i++) {
@@ -85,7 +93,8 @@ public class Game extends Escena {
         bmObstaculos.add(Bitmap.createScaledBitmap(imgObstacle, anchoPantalla / 10, altoPantalla / 8, false));
         imgObstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo3);
         bmObstaculos.add(Bitmap.createScaledBitmap(imgObstacle, anchoPantalla / 10, altoPantalla / 8, false));
-        obstaculo = new Obstaculo(context, floorCap.getPosY() - bmObstaculos.get(0).getHeight(), floorCap.getVelocidad(), anchoPantalla, altoPantalla, bmObstaculos);
+        obstaculo = new Obstaculo(context, 0,floorCap.getPosY() - bmObstaculos.get(0).getHeight(), floorCap.getVelocidad(), anchoPantalla, altoPantalla, bmObstaculos);
+//        obstaculo_ = new Obstaculo(context, obstaculo.getPosX(),floorCap.getPosY() - bmObstaculos.get(0).getHeight(), floorCap.getVelocidad(), anchoPantalla, altoPantalla, bmObstaculos);
 
 
         bmDead = u.getFrames(8, "dead", "pDead", anchoPantalla / 10);
@@ -94,11 +103,11 @@ public class Game extends Escena {
         bmColision = u.getFrames(2, "collision", "pCollision", 200);
         p = new Personaje(context, bmRun, bmJump, bmColision, bmDead, anchoPantalla, altoPantalla, 0, anchoPantalla / 3, floorCap.getPosY() - bmRun[0].getHeight());
 
-
+        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     public void actualizarFisica() {
-        if (!end) {
+        if (!endGame) {
             //        backgroundCap.mover();
             buildingsCap.mover();
             floorCap.mover();
@@ -106,22 +115,31 @@ public class Game extends Escena {
                 cd.mover();
             }
             obstaculo.mover();
+//            obstaculo_.mover();
 //            p.mover();
             if (p.isJumping()) {
-                p.saltar();
+                p.jump();
+            }
+            if(p.isDead()&&p.getPosY()==p.getInitialPosY()){
+                endGame=true;
             }
             p.cambioFrame();
-
-//            Log.i("LIVES ", (p.rectPersonaje) + "");
-//            Log.i("LIVES ", (obstaculo.rectObstacle) + "");
-            if (p.rectPersonaje.intersect(obstaculo.rectObstacle) && obstaculo.isCollisionable()) {
+            if (p.rectPersonaje.intersect(obstaculo.rectObstacle) && obstaculo.isCollisionable() ) {
                 obstaculo.setCollisionable(false);
                 p.setBroke(true);
                 p.setLives(p.getLives() - 1);
                 if (p.getLives() == 0) {
-                    end = true;
+                    endRun = true;
+                    p.setDead(true);
                     saveGame(p.getMetres());
                     p.setBroke(false);
+                    if (withVibration) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                        } else {
+                            vibrator.vibrate(500);
+                        }
+                    }
                 }
             }
 
@@ -129,6 +147,10 @@ public class Game extends Escena {
                 obstaculo.setCollisionable(true);
                 p.setBroke(false);
             }
+//            if(p.getPosX()>obstaculo_.getPosX()+obstaculo_.getImgObstacle().getWidth()){
+//                obstaculo_.setCollisionable(true);
+//                p.setBroke(false);
+//            }
         }
     }
 
@@ -142,9 +164,10 @@ public class Game extends Escena {
             buildingsCap.dibujar(c);
             floorCap.dibujar(c);
             obstaculo.dibujar(c);
+//            obstaculo_.dibujar(c);
             p.dibujar(c);
             super.dibujar(c);
-            if (System.currentTimeMillis() - initialTime > 20000) {
+            if (System.currentTimeMillis() - difTime > 10000) {
                 buildingsCap.setVelocidad(buildingsCap.getVelocidad() - u.getDpW(2));
                 floorCap.setVelocidad(floorCap.getVelocidad() - u.getDpW(2));
                 for (Cloud cd : arrayClouds) {
@@ -152,11 +175,18 @@ public class Game extends Escena {
                     cd.setMaxRandom(+2);
                 }
                 obstaculo.setSpeed(floorCap.getVelocidad());
+//                obstaculo_.setSpeed(floorCap.getVelocidad());
                 p.setFrameTime(p.getFrameTime() - u.getDpW(2));
-                initialTime = System.currentTimeMillis();
+                difTime = System.currentTimeMillis();
             }
-            if (end) {
+            if (endRun) {
                 c.drawBitmap(imgGameLost, anchoPantalla / 2 - imgGameLost.getWidth() / 2, altoPantalla / 2 - imgGameLost.getHeight() / 2, null);
+                p.setDead(true);
+                if (!p.isJumping()&&p.isDead()) {
+                    p.setJumping(true);
+                    p.setIndex(0);
+                    p.setPulsacionTime();
+                }
             }
         } catch (Exception e) {
             Log.i("ERROR AL DIBUJAR", e.getLocalizedMessage());
@@ -181,7 +211,7 @@ public class Game extends Escena {
 
             case MotionEvent.ACTION_UP:// Al levantar el último dedo
                 //salto
-                if (!p.isJumping()) {
+                if (!p.isJumping()&&!p.isDead()) {
                     p.setJumping(true);
                     p.setIndex(0);
                     p.setPulsacionTime();

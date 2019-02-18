@@ -8,18 +8,19 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import java.util.Timer;
+
 public class Personaje {
 
     private Context context;
     private Bitmap bmAux;
     private Bitmap[] bmLives, bmRun, bmJump, bmCollision, bmDead;
     private int lives, posX, posY, initialPosY, speed, drawTime = 50, frameTime = 100, jumpTime = 200, index = 0, screenWidth, screenHeight, metres;
-    private long actualTime = System.currentTimeMillis(), pulsacionTime;
-    private boolean jumping = false, dead = false, collision = false;
+    private long actualTime = System.currentTimeMillis(), pulsacionTime, metresTime = System.currentTimeMillis(), deadTime;
+    private boolean jumping = false, dead = false, broke = false;
     public Rect rectPersonaje;
     private Paint p, pText;
     private Utils u;
-    private boolean broke = false;
 
     public Personaje(Context context, Bitmap[] bmRun, Bitmap[] bmJump, Bitmap[] bmCollision, Bitmap[] bmDead, int anchoPantalla, int altoPantalla, int speed, int posX, int posY) {
         this.context = context;
@@ -29,7 +30,7 @@ public class Personaje {
         this.screenHeight = altoPantalla;
         this.bmRun = bmRun;
         this.bmJump = bmJump;
-        this.bmCollision = bmCollision;
+//        this.bmCollision = bmCollision;
         this.bmDead = bmDead;
         this.posX = posX;
         this.posY = posY;
@@ -44,24 +45,28 @@ public class Personaje {
     public void mover() {
     }
 
-    public void saltar() {
+
+    public void jump() {
         if (System.currentTimeMillis() < (pulsacionTime + 700)) {
-            posY -= u.getDpH(10);
+            posY -= u.getDpH(8);
         } else {
-            posY += u.getDpH(10);
+            posY += u.getDpH(8);
         }
         if (initialPosY == posY) {
-            jumping = !jumping;
+            jumping = false;
             index = 0;
         }
     }
 
     public void cambioFrame() {
         if (System.currentTimeMillis() - actualTime > frameTime) {
-            if (jumping) {
+            if (jumping && !dead) {
                 rectPersonaje = new Rect(posX + bmJump[index].getWidth() / 4, posY + bmJump[index].getHeight() / 2,
                         posX + bmJump[index].getWidth() * 2 / 3, posY + bmJump[index].getHeight());
                 if (index < bmJump.length - 1)
+                    index++;
+            } else if (jumping && dead) {
+                if (index < bmDead.length - 1)
                     index++;
             } else {
                 rectPersonaje = new Rect(posX + bmRun[index].getWidth() / 4, posY + bmRun[index].getHeight() / 2,
@@ -74,19 +79,24 @@ public class Personaje {
     }
 
     public void dibujar(Canvas c) {
-        setMetres(getMetres()+1);
+        if (!dead && System.currentTimeMillis() - metresTime > 500) {
+            setMetres(getMetres() + 1);
+            metresTime = System.currentTimeMillis();
+        }
         c.drawBitmap(bmLives[lives], u.getDpW(20), u.getDpH(10), null);
-        c.drawText(context.getString(R.string.distance) + ": " + metres + " m", u.getDpW(screenWidth) / 3, u.getDpH(100), pText);
+        c.drawText(context.getString(R.string.distance) + ": " + metres + " m", u.getDpW(screenWidth) * 2 / 5, u.getDpH(100), pText);
         if (isBroke()) {
             p.setAlpha((int) (Math.random() * 255 + 100));
         } else {
             p.setAlpha(255);
         }
-        if (!jumping) {
-            c.drawBitmap(bmRun[index], posX, posY, p);
-//            c.drawRect(rectPersonaje, p);
-        } else if (jumping) {
+        if (jumping && !dead) {
             c.drawBitmap(bmJump[index], posX, posY, p);
+//            c.drawRect(rectPersonaje, p);
+        } else if (jumping && dead) {
+            c.drawBitmap(bmDead[index], posX, posY, p);
+        } else {
+            c.drawBitmap(bmRun[index], posX, posY, p);
 //            c.drawRect(rectPersonaje, p);
         }
     }
@@ -169,5 +179,29 @@ public class Personaje {
 
     public void setMetres(int metres) {
         this.metres = metres;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
+    public long getDeadTime() {
+        return deadTime;
+    }
+
+    public void setDeadTime() {
+        this.deadTime = System.currentTimeMillis();
+    }
+
+    public int getInitialPosY() {
+        return initialPosY;
+    }
+
+    public void setInitialPosY(int initialPosY) {
+        this.initialPosY = initialPosY;
     }
 }

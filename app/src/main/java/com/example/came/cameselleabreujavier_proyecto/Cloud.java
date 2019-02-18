@@ -46,7 +46,7 @@ public class Cloud {
             if (this.posX + imgCloud.getWidth() < 0) {
                 this.velocidad = (int) (Math.random() * maxRandom + minRandom);
                 this.imgCloud = bitmapNubes.get((int) (Math.random() * bitmapNubes.size()));
-                posY = (int) (Math.random() * altoPantalla / 4-altoPantalla/2);
+                posY = (int) (Math.random() * altoPantalla / 4);
                 posX = (int) (Math.random() * anchoPantalla * 3 + anchoPantalla);
             }
         }

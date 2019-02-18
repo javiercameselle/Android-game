@@ -20,6 +20,9 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.mediaPlayer;
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.musicStarted;
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withVibration;
 
 public class MenuPrincipal extends Escena {
 
@@ -33,10 +36,9 @@ public class MenuPrincipal extends Escena {
     private boolean suena = true;
     private Vibrator vibrator;
     private Cap capa;
-    public boolean canVibrate;
     /**/
     private SoundPool efectos;
-    private int sonidoWoosh, sonidoPajaro, sonidoExplosion;
+    private int diferentes_efectos;
     final private int maxSonidosSimultaneos = 10;
     /**/
 
@@ -64,7 +66,7 @@ public class MenuPrincipal extends Escena {
         imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_cloud);
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
-        imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.alphas_clouds);
+        imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds_withalpha);
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
         bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
         for (int i = 0; i < fin; i++) {
@@ -101,26 +103,30 @@ public class MenuPrincipal extends Escena {
         creditos = new Rect(ancho2, alto * 4, ancho2 * 3, alto * 6);
         imgCréditos = BitmapFactory.decodeResource(context.getResources(), R.drawable.team_idea);
         imgCréditos = Bitmap.createScaledBitmap(imgCréditos, anchoPantalla / 8, altoPantalla / 6, false);
-
-        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-
-        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        mediaPlayer = MediaPlayer.create(context, R.raw.musica);
-        mediaPlayer.setVolume(50, 50);
-        mediaPlayer.start();
-
-        if ((android.os.Build.VERSION.SDK_INT) >= 21) {
-            SoundPool.Builder spb = new SoundPool.Builder();
-            spb.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
-            spb.setMaxStreams(maxSonidosSimultaneos);
-            this.efectos = spb.build();
-        } else {
-            this.efectos = new SoundPool(maxSonidosSimultaneos, AudioManager.STREAM_MUSIC, 0);
+        if(withVibration) {
+            vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         }
-        sonidoWoosh = efectos.load(context, R.raw.woosh, 1);
-        sonidoExplosion = efectos.load(context, R.raw.explosion, 1);
-        sonidoPajaro = efectos.load(context, R.raw.pajaro, 1);
+        if(withSound) {
+            audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+            int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            mediaPlayer = MediaPlayer.create(context, R.raw.musica);
+            mediaPlayer.setVolume(50, 50);
+            if(!musicStarted) {
+                mediaPlayer.start();
+                musicStarted=!musicStarted;
+            }
+
+            if ((android.os.Build.VERSION.SDK_INT) >= 21) {
+                SoundPool.Builder spb = new SoundPool.Builder();
+                spb.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
+                spb.setMaxStreams(maxSonidosSimultaneos);
+                this.efectos = spb.build();
+            } else {
+                this.efectos = new SoundPool(maxSonidosSimultaneos, AudioManager.STREAM_MUSIC, 0);
+            }
+
+        }
     }
 
 
@@ -149,25 +155,21 @@ public class MenuPrincipal extends Escena {
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
                 if (pulsa(juego, event)) {
                     mediaPlayer.stop();
-                    if (canVibrate) {
+                    if (withVibration) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+                            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
                         } else {
-                            vibrator.vibrate(500);
+                            vibrator.vibrate(100);
                         }
                     }
                     return 1;
                 } else if (pulsa(ayuda, event)) {
-                    mediaPlayer.stop();
                     return 2;
                 } else if (pulsa(records, event)) {
-                    mediaPlayer.stop();
                     return 3;
                 } else if (pulsa(opciones, event)) {
-                    mediaPlayer.stop();
                     return 4;
                 } else if (pulsa(creditos, event)) {
-                    mediaPlayer.stop();
                     return 5;
                 }
                 break;

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Obstaculo {
 
     private Context context;
-    private int speed, posX, posY, drawTime = 10, screenWidth, screenHeigth;
+    private int speed, posX,posXObstacle, posY, drawTime = 10, screenWidth, screenHeigth;
     private Bitmap imgObstacle;
     private ArrayList<Bitmap> obstacles;
     private long tiempoActual = System.currentTimeMillis();
@@ -22,10 +22,10 @@ public class Obstaculo {
     private boolean collisionable = true;
 
 
-    public Obstaculo(Context context, int posY, int speed, int screenWidth, int screenHeigth, ArrayList<Bitmap> obstacles) {
+    public Obstaculo(Context context, int posXObstacle,int posY, int speed, int screenWidth, int screenHeigth, ArrayList<Bitmap> obstacles) {
         this.context = context;
         this.speed = speed;
-        this.posX = (int) (Math.random() * screenWidth + screenWidth);
+        this.posX = (int) (Math.random() * screenWidth + screenWidth)+posXObstacle;
         this.posY = posY;
         this.screenWidth = screenWidth;
         this.screenHeigth = screenHeigth;
@@ -51,7 +51,7 @@ public class Obstaculo {
             tiempoActual = System.currentTimeMillis();
             if (this.posX + imgObstacle.getWidth() < 0) {
                 this.imgObstacle = obstacles.get((int) (Math.random() * obstacles.size()));
-                posX = (int) (Math.random() * screenWidth * 2 + screenWidth);
+                posX = (int) (Math.random() * screenWidth * 2 + screenWidth)+posXObstacle;
             }
         }
     }

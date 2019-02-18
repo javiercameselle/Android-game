@@ -12,7 +12,7 @@ import android.view.Window;
 public class MainActivity extends AppCompatActivity {
     public static MediaPlayer mediaPlayer;
     public static AudioManager audioManager;
-    public static boolean withSound=true;
+    public static boolean withSound=true,withVibration=true, musicStarted=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
