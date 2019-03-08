@@ -9,8 +9,10 @@
     <string name="vibration">Vibration</string>
     <string name="distance">Distance</string>
     <string name="thanks">Thanks to:</string>
-    <string name="gameicons">-Game-icons.net for the most game icons.</string>
-    <string name="opengameart">-Opengameart.com for using their textures and sprites to animations.</string>
-    <string name="teacher">-My teacher, Javi Conde, for the patience and to resolve my doubts.</string>
-    <string name="people">-All the people who tried to play the game in its differents versions.</string>
+    <string name="gameicons">Game-icons.net, noiseforfun.com and iconarchive.com for the most game icons and sound.</string>
+    <string name="opengameart">Opengameart.com for using their textures and sprites to animations.</string>
+    <string name="teacher">My teacher, Javi Conde, for the patience and to resolve my doubts.</string>
+    <string name="people">All the people who tried to play the game in its differents versions.</string>
+    <string name="name">Javier Cameselle</string>
+    <string name="submit">Sumbit</string>
 </resources>

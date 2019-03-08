@@ -3,10 +3,15 @@
     package="com.example.came.cameselleabreujavier_proyecto">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera2" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-feature android:name="android.hardware.camera2.flash" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/iconapp"
+        android:icon="@drawable/icono_running"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"

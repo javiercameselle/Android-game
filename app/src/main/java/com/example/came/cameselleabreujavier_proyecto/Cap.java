@@ -4,21 +4,20 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.util.Log;
 
 import java.util.ArrayList;
 
 public class Cap {
 
-    private ArrayList<ImagenesCapa> imgCaps = new ArrayList<>();
-//    private int anchoPantalla, altoPantalla;
+    private ArrayList<ImagesCap> imgCaps = new ArrayList<>();
+//    private int screenWidth, screenHeight;
     private int velocidad = 0;
     private int posY = 0;
 
     public Cap(Context context, int anchoPantalla, int altoPantalla, ArrayList<Bitmap> bitmapsCapa) {
         if (bitmapsCapa.size() != 0) {
             for (int i = 0; i < bitmapsCapa.size(); i++) {
-                imgCaps.add(new ImagenesCapa(posY, bitmapsCapa.get(i), anchoPantalla, -1));
+                imgCaps.add(new ImagesCap(posY, bitmapsCapa.get(i), anchoPantalla, -1));
             }
 
             imgCaps.get(0).posicion = new PointF(0, posY);
@@ -49,11 +48,11 @@ public class Cap {
 
     public void mover() {
         if (velocidad < 0) {
-            for (ImagenesCapa f : imgCaps) {
+            for (ImagesCap f : imgCaps) {
                 f.posicion.x += velocidad;
             }
             for (int i = 0; i < imgCaps.size(); i++) {
-                ImagenesCapa ff = imgCaps.get(i);
+                ImagesCap ff = imgCaps.get(i);
                 if (ff.posicion.x + ff.imagen.getWidth() < 0) {
                     ff.posicion.x = imgCaps.get(imgCaps.size() - 1).posicion.x + imgCaps.get(imgCaps.size() - 1).imagen.getWidth();
                     imgCaps.remove(ff);
@@ -65,7 +64,7 @@ public class Cap {
     }
 
     public void dibujar(Canvas c) {
-        for (ImagenesCapa f : imgCaps) {
+        for (ImagesCap f : imgCaps) {
             c.drawBitmap(f.imagen, f.posicion.x, f.posicion.y, null);
         }
     }

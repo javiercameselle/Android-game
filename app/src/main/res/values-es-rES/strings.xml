@@ -10,8 +10,10 @@
     <string name="vibration">Vibración</string>
     <string name="distance">Distancia</string>
     <string name="thanks">Agradecimientos a:</string>
-    <string name="gameicons">-Game-icons.net por la mayoría de iconos del juego.</string>
-    <string name="opengameart">-Opengameart.com por sus texturas y sprites para las animaciones.</string>
-    <string name="teacher">-A mi profesor, Javi Conde, por la paciencia y por resolver mis dudas.</string>
-    <string name="people">-A las personas que probaron el juego durante sus diferentes versiones.</string>
+    <string name="gameicons">Game-icons.net, noiseforfun.com y iconarchive.com por la mayoría de iconos y música del juego.</string>
+    <string name="opengameart">Opengameart.com por sus texturas y sprites para las animaciones.</string>
+    <string name="teacher">A mi profesor, Javi Conde, por la paciencia y por resolver mis dudas.</string>
+    <string name="people">A las personas que probaron el juego durante sus diferentes versiones.</string>
+    <string name="submit">Enviar</string>
+    <string name="name">Javier Cameselle</string>
 </resources>

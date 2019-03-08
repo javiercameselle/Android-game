@@ -14,17 +14,18 @@ public class Cloud {
     private long tiempoActual = System.currentTimeMillis();
     private Bitmap imgCloud;
     private ArrayList<Bitmap> bitmapNubes;
-    private int altoPantalla, anchoPantalla, minRandom=6, maxRandom=9;
+    private int altoPantalla, anchoPantalla, minRandom = 8, maxRandom = 10;
     private Paint pNube;
     private Utils u;
+    private boolean back;
 
     public Cloud(Context context, int anchoPantalla, int altoPantalla, ArrayList<Bitmap> bitmapNubes) {
-        u=new Utils(context);
+        u = new Utils(context);
         this.context = context;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
         this.velocidad = (int) (Math.random() * maxRandom + minRandom);
-        this.posX = (int) (Math.random() * anchoPantalla + anchoPantalla);
+        this.posX = (int) (Math.random() * anchoPantalla * 3 + anchoPantalla);
         this.posY = (int) (Math.random() * altoPantalla / 4);
         this.alfa = (int) (Math.random() * 255 + 175);
         this.pNube = new Paint();
@@ -44,7 +45,12 @@ public class Cloud {
             this.posX += u.getDpW(velocidad) * -1;
             tiempoActual = System.currentTimeMillis();
             if (this.posX + imgCloud.getWidth() < 0) {
-                this.velocidad = (int) (Math.random() * maxRandom + minRandom);
+                if (Math.random() * 6000 > 3003) {
+                    this.back = true;
+                } else {
+                    this.back = false;
+                }
+                this.velocidad = u.getDpW((int) (Math.random() * maxRandom + minRandom));
                 this.imgCloud = bitmapNubes.get((int) (Math.random() * bitmapNubes.size()));
                 posY = (int) (Math.random() * altoPantalla / 4);
                 posX = (int) (Math.random() * anchoPantalla * 3 + anchoPantalla);
@@ -149,5 +155,13 @@ public class Cloud {
 
     public void setMaxRandom(int maxRandom) {
         this.maxRandom = maxRandom;
+    }
+
+    public boolean isBack() {
+        return back;
+    }
+
+    public void setBack(boolean back) {
+        this.back = back;
     }
 }

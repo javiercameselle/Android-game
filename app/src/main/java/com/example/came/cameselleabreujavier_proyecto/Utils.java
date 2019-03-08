@@ -72,7 +72,7 @@ public class Utils {
 
     // 1920x1280
     public int getDpW(int pixels) {
-        int x = (int) ((pixels / 19.20) * ControlEscenas.anchoPantalla) / 100;
+        int x = (int) ((pixels / 19.20) * SceneControl.screenWidth) / 100;
         if (x == 0) {   //comprobación para pantallas pequeñas( ej.u.getDpW(2)=0)
             return 1;
         }
@@ -81,7 +81,7 @@ public class Utils {
 
     // 1920x1280
     public int getDpH(int pixels) {
-        int y = (int) ((pixels / 10.80) * ControlEscenas.altoPantalla) / 100;
+        int y = (int) ((pixels / 10.80) * SceneControl.screenHeight) / 100;
         if (y == 0) {   ////comprobación para pantallas pequeñas( ej.u.getDpH(2)=0)
             return 1;
         }

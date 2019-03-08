@@ -1,22 +1,31 @@
 package com.example.came.cameselleabreujavier_proyecto;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
 public class MainActivity extends AppCompatActivity {
-    public static MediaPlayer mediaPlayer;
-    public static AudioManager audioManager;
-    public static boolean withSound=true,withVibration=true, musicStarted=false;
+
+    protected static MediaPlayer mediaPlayer;//
+    protected static AudioManager audioManager;
+    protected static boolean withSound, withVibration, musicStarted;
+    private SceneControl p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         View decorView = getWindow().getDecorView();
         int opciones = View.SYSTEM_UI_FLAG_FULLSCREEN        // pone la pantalla en modo pantalla completa ocultando elementos no criticos como la barra de estado.
@@ -29,8 +38,12 @@ public class MainActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
+        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+        withSound = preferences.getBoolean("sound", false);
+        withVibration = preferences.getBoolean("vibration", false);
+        mediaPlayer = MediaPlayer.create(this, R.raw.music_menu);
 
-        ControlEscenas p = new ControlEscenas(this);
+        p = new SceneControl(this);
         p.setKeepScreenOn(true);
 
         setContentView(p);
@@ -39,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         View decorView = getWindow().getDecorView();
         int opciones = View.SYSTEM_UI_FLAG_FULLSCREEN        // pone la pantalla en modo pantalla completa ocultando elementos no criticos como la barra de estado.
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION  // oculta la barra de navegación
@@ -49,12 +61,33 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(opciones);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+
+
+        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+        withSound = preferences.getBoolean("sound", false);
+        withVibration = preferences.getBoolean("vibration", false);
+        if (withSound)
+            mediaPlayer.start();
+        if (p == null) {
+            p = new SceneControl(this);
+        } else {
+            p.running = true;
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        if (withSound)
+            mediaPlayer.pause();
+        p.running = false;
+        super.onPause();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         mediaPlayer.stop();
+        System.exit(0);
     }
 }
 
