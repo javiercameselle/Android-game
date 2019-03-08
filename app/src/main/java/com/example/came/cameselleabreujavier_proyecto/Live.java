@@ -30,7 +30,7 @@ public class Live {
         min = screenHeight * 5 / 10;
 //        this.posX = (int) (Math.random() * screenWidth * 15 + screenWidth * 2);
         this.posX = screenWidth;
-        this.posY = (int)(Math.random());
+        this.posY = (int) (Math.random() * screenHeight + screenHeight * 2 / 3);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.catched = false;
@@ -51,7 +51,7 @@ public class Live {
             this.speed = (int) (Math.random() * 14 + 18);
 //            this.posX = (int) (Math.random() * screenWidth * 15 + screenWidth * 5);
             this.posX = screenWidth * 2;
-            this.posY = (int)(Math.random()*1080+700);
+            this.posY = (int) (Math.random() * screenHeight + screenHeight * 2 / 3);
             catched = false;
         }
         if (posX > 2000) setCollisionable(true);
