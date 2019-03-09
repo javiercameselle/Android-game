@@ -19,28 +19,30 @@ public class Records extends Scene {
 
     private Bitmap imgBuildingsShadow, imgGold, imgSilver, imgBronze, imgMedal;
     private HashMap<String, Integer> values;
-    private ArrayList<String> nombres;
-    private ArrayList<Integer> distancias;
-    private int[] posY;
+    private ArrayList<String> names;
+    private ArrayList<Integer> distances;
+    private int screenWidth, screenHeight;
     private Utils u;
-    private Paint pTexto, pRect1, pRect2, pRect3;
+    private Paint pText, pRect1, pRect2, pRect3;
     private Rect rectFirst, rectSecond, rectThird;
 
-    public Records(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
-        super(context, idEscena, anchoPantalla, altoPantalla);
+    public Records(Context context, int idScene, int screenWidth, int screenHeight) {
+        super(context, idScene, screenWidth, screenHeight);
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
         values = new HashMap<>();
-        nombres = new ArrayList<>();
-        distancias = new ArrayList<>();
+        names = new ArrayList<>();
+        distances = new ArrayList<>();
         u = new Utils(context);
 
-        rectFirst = new Rect(anchoPantalla / 3, altoPantalla / 3, anchoPantalla * 2 / 3, altoPantalla);
-        rectSecond = new Rect(0, altoPantalla / 2, anchoPantalla / 3, altoPantalla);
-        rectThird = new Rect(anchoPantalla * 2 / 3, altoPantalla * 2 / 3, anchoPantalla, altoPantalla);
+        rectFirst = new Rect(screenWidth / 3, screenHeight / 3, screenWidth * 2 / 3, screenHeight);
+        rectSecond = new Rect(0, screenHeight / 2, screenWidth / 3, screenHeight);
+        rectThird = new Rect(screenWidth * 2 / 3, screenHeight * 2 / 3, screenWidth, screenHeight);
 
-        this.pTexto = new Paint();
-        this.pTexto.setColor(Color.BLACK);
-        this.pTexto.setTextAlign(Paint.Align.CENTER);
-        this.pTexto.setTextSize(u.getDpW(70));
+        this.pText = new Paint();
+        this.pText.setColor(Color.BLACK);
+        this.pText.setTextAlign(Paint.Align.CENTER);
+        this.pText.setTextSize(u.getDpW(70));
 
         this.pRect1 = new Paint();
         this.pRect1.setColor(Color.rgb(245, 208, 111));
@@ -63,11 +65,11 @@ public class Records extends Scene {
         imgMedal = BitmapFactory.decodeResource(context.getResources(), R.drawable.medal);
         imgMedal = Bitmap.createScaledBitmap(imgMedal, u.getDpW(100), u.getDpH(100), false);
 
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.moon_background);
-        fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);
+        background = BitmapFactory.decodeResource(context.getResources(), R.drawable.moon_background);
+        background = Bitmap.createScaledBitmap(background, screenWidth, screenHeight, false);
 
         imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings2);
-        imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, anchoPantalla, altoPantalla, false);
+        imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, screenWidth, screenHeight, false);
 
         DataBase db = new DataBase(context, "records", null, 1);
         SQLiteDatabase database = db.getWritableDatabase();
@@ -80,14 +82,13 @@ public class Records extends Scene {
             int numRaws = c.getCount();
             do {
                 name = c.getString(0);
-                nombres.add(name);
+                names.add(name);
 //                Log.i("xxxName", name);
                 distance = c.getInt(1);
-                distancias.add(distance);
+                distances.add(distance);
 //                Log.i("xxxDistance", distance + "");
                 values.put(name, distance);
             } while (c.moveToNext());
-//            posY = new int[numRaws];
         }
         if (database != null) {
             database.close();
@@ -100,38 +101,34 @@ public class Records extends Scene {
 
     public void dibujar(Canvas c) {
         try {
-            c.drawBitmap(fondo, 0, 0, null);
+            c.drawBitmap(background, 0, 0, null);
             c.drawBitmap(imgBuildingsShadow, 0, 0, null);
+            super.dibujar(c);
+            c.drawText(context.getString(R.string.records), screenWidth / 2, u.getDpH(200), pText2);
             c.drawRect(rectFirst, pRect1);
             c.drawRect(rectSecond, pRect2);
             c.drawRect(rectThird, pRect3);
-//            Iterator<Map.Entry<String, Integer>> it = values.entrySet().iterator();
-//            for (int i = 0; i <= values.size(); i++) {
-            for (int i = 0; i <= nombres.size(); i++) {
-//                Map.Entry<String, Integer> e = it.next();
+            for (int i = 0; i < names.size(); i++) {
                 if (i == 0) {
-//                    this.pTexto.setColor(Color.rgb(245, 208, 111));
+//                    this.pText.setColor(Color.rgb(245, 208, 111));
                     c.drawBitmap(imgMedal, rectFirst.centerX() - imgMedal.getWidth() / 2, rectFirst.centerY() - imgMedal.getHeight() / 2, null);
-//                    c.drawText(e.getKey() + " - " + e.getValue(), rectFirst.centerX(), rectFirst.top + u.getDpH(100), this.pTexto);
-                    c.drawText(nombres.get(i) + " - " + distancias.get(i) + "m.", rectFirst.centerX(), rectFirst.top + u.getDpH(100), this.pTexto);
+                    c.drawText(names.get(i) + " - " + distances.get(i) + "m.", rectFirst.centerX(), rectFirst.top + u.getDpH(100), this.pText);
                 }
                 if (i == 1) {
-//                    this.pTexto.setColor(Color.rgb(192, 192, 192));
+//                    this.pText.setColor(Color.rgb(192, 192, 192));
                     c.drawBitmap(imgMedal, rectSecond.centerX() - imgMedal.getWidth() / 2, rectSecond.centerY() - imgMedal.getHeight() / 2, null);
-//                    c.drawText(e.getKey() + " - " + e.getValue(), rectSecond.centerX(), rectSecond.top + u.getDpH(100), this.pTexto);
-                    c.drawText(nombres.get(i) + " - " + distancias.get(i) + "m.", rectSecond.centerX(), rectSecond.top + u.getDpH(100), this.pTexto);
+                    c.drawText(names.get(i) + " - " + distances.get(i) + "m.", rectSecond.centerX(), rectSecond.top + u.getDpH(100), this.pText);
                 }
                 if (i == 2) {
-//                    this.pTexto.setColor(Color.rgb(205, 127, 50));
+//                    this.pText.setColor(Color.rgb(205, 127, 50));
                     c.drawBitmap(imgMedal, rectThird.centerX() - imgMedal.getWidth() / 2, rectThird.centerY() - imgMedal.getHeight() / 2, null);
-//                    c.drawText(e.getKey() + " - " + e.getValue(), rectThird.centerX(), rectThird.top + u.getDpH(100), this.pTexto);
-                    c.drawText(nombres.get(i) + " - " + distancias.get(i) + "m.", rectThird.centerX(), rectThird.top + u.getDpH(100), this.pTexto);
+                    c.drawText(names.get(i) + " - " + distances.get(i) + "m.", rectThird.centerX(), rectThird.top + u.getDpH(100), this.pText);
                 }
 //
-//                c.drawText( e.getKey() + " - " + e.getValue(), u.getDpW(200), u.getDpH((i + 1) * 150), this.pTexto);
+//                c.drawText( e.getKey() + " - " + e.getValue(), u.getDpW(200), u.getDpH((i + 1) * 150), this.pText);
             }
 
-            super.dibujar(c);
+
         } catch (Exception e) {
             Log.i("ERROR AL DIBUJAR", e.getLocalizedMessage());
         }
@@ -166,10 +163,10 @@ public class Records extends Scene {
         }
 
         int idPadre = super.onTouchEvent(event);
-        if (idPadre != idEscena) {
+        if (idPadre != idScene) {
             return idPadre;
         }
-        return idEscena;
+        return idScene;
     }
 
 }

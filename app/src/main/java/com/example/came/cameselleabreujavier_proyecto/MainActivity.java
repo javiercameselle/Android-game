@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     protected static MediaPlayer mediaPlayer;//
@@ -25,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         View decorView = getWindow().getDecorView();
         int opciones = View.SYSTEM_UI_FLAG_FULLSCREEN        // pone la pantalla en modo pantalla completa ocultando elementos no criticos como la barra de estado.

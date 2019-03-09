@@ -24,15 +24,17 @@ public class Live {
     public Live(Context context, int screenWidth, int screenHeight) {
         u = new Utils(context);
         r = new Random();
+        this.screenWidth = screenWidth;//1920
+        this.screenHeight = screenHeight;//1080
         this.bitmapLive = BitmapFactory.decodeResource(context.getResources(), R.drawable.live);
         this.bitmapLive = Bitmap.createScaledBitmap(bitmapLive, screenWidth / 15, screenHeight / 15, false);
-        max = screenHeight * 7 / 10;
-        min = screenHeight * 5 / 10;
-//        this.posX = (int) (Math.random() * screenWidth * 15 + screenWidth * 2);
-        this.posX = screenWidth;
-        this.posY = (int) (Math.random() * screenHeight + screenHeight * 2 / 3);
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
+        this.max = screenHeight * 7 / 10;
+        this.min = screenHeight * 3 / 10;
+        this.posX = (int) (Math.random() * screenWidth * 15 + screenWidth * 2);
+        this.posY = (int) (Math.random() * screenHeight * 8 / 10);
+        while (this.posY < screenHeight * 6 / 10) {
+            this.posY = (int) (Math.random() * screenHeight * 8 / 10);
+        }
         this.catched = false;
         this.speed = (int) (Math.random() * 16 + 20);
         p = new Paint();
@@ -42,16 +44,16 @@ public class Live {
     }
 
     public void mover() {
-
-        Log.i("pos", posY + "");
-        Log.i("posPantalla", screenWidth + "-" + screenHeight);
+//        Log.i("pos", posY + "");
         rectLive = new Rect(posX, posY, posX + bitmapLive.getWidth(), posY + bitmapLive.getHeight());
         this.posX -= speed;
         if (posX + bitmapLive.getWidth() < 0) {
             this.speed = (int) (Math.random() * 14 + 18);
-//            this.posX = (int) (Math.random() * screenWidth * 15 + screenWidth * 5);
-            this.posX = screenWidth * 2;
-            this.posY = (int) (Math.random() * screenHeight + screenHeight * 2 / 3);
+            this.posX = (int) (Math.random() * screenWidth * 15 + screenWidth * 5);
+            this.posY = (int) (Math.random() * screenHeight * 8 / 10);
+            while (this.posY < screenHeight * 6 / 10) {
+                this.posY = (int) (Math.random() * screenHeight * 8 / 10);
+            }
             catched = false;
         }
         if (posX > 2000) setCollisionable(true);

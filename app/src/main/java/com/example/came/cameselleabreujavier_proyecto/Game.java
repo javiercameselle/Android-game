@@ -19,7 +19,6 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
-import static com.example.came.cameselleabreujavier_proyecto.MainActivity.audioManager;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.mediaPlayer;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.musicStarted;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
@@ -69,7 +68,7 @@ public class Game extends Scene {
         rectPlay = new Rect(anchoPantalla * 3 / 8, altoPantalla * 3 / 7, anchoPantalla * 5 / 8, altoPantalla * 5 / 7);
         imgPlay = BitmapFactory.decodeResource(context.getResources(), R.drawable.play_button);
         imgPlay = Bitmap.createScaledBitmap(imgPlay, anchoPantalla * 3 / 8, altoPantalla * 3 / 7, false);
-        //fondo
+        //background
 //        bmBackGround = new ArrayList<>();
         imgFondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.game_dark_background);
         imgFondo = Bitmap.createScaledBitmap(imgFondo, anchoPantalla, altoPantalla, false);
@@ -254,7 +253,7 @@ public class Game extends Scene {
                 difTime = System.currentTimeMillis();
             }
             if (endRun) {
-                c.drawBitmap(imgGameOver, anchoPantalla / 2 - imgGameOver.getWidth() / 2, altoPantalla / 2 - imgGameOver.getHeight() / 2, null);
+                c.drawBitmap(imgGameOver, screenWidth / 2 - imgGameOver.getWidth() / 2, screenHeight / 2 - imgGameOver.getHeight() / 2, null);
                 //p.setDead(true);
                 if (withSound)
                     efectos.play(gameoverEffect, vol, vol, 1, 0, 1);
@@ -304,6 +303,7 @@ public class Game extends Scene {
                 } else if (pulsa(rectPlay, event) && pause == true) {
                     this.pause = false;
                 }
+                
                 //jump
                 else if (!p.isJumping() && !p.isDead() && !pause) {
                     p.setJumping(true);
@@ -329,10 +329,10 @@ public class Game extends Scene {
         }
 
         int idPadre = super.onTouchEvent(event);
-        if (idPadre != idEscena) {
+        if (idPadre != idScene) {
             return idPadre;
         }
-        return idEscena;
+        return idScene;
     }
 }
 

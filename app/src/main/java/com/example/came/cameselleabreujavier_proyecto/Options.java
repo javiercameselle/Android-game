@@ -33,8 +33,8 @@ public class Options extends Scene {
     public Options(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
         u = new Utils(context);
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.moon_background);
-        fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);
+        background = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg);
+        background = Bitmap.createScaledBitmap(background, anchoPantalla, altoPantalla, false);
 
         imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings2);
         imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, anchoPantalla, altoPantalla, false);
@@ -76,7 +76,7 @@ public class Options extends Scene {
 
     public void dibujar(Canvas c) {
         try {
-            c.drawBitmap(fondo, 0, 0, null);
+            c.drawBitmap(background, 0, 0, null);
             c.drawBitmap(imgBuildingsShadow, 0, 0, null);
             c.drawText(context.getString(R.string.sound), widthAux * 2, heightAux * 3, pText);
 //            c.drawRect(rSonido, pBoton);
@@ -118,7 +118,7 @@ public class Options extends Scene {
             case MotionEvent.ACTION_UP:                     // Al levantar el último dedo
                 if (pulsa(rSonido, event)) {
                     if (!withSound) {
-                        efectos.play(selection, vol, vol, 1, 0, 1);
+                        effects.play(selection, vol, vol, 1, 0, 1);
 
                         if (mediaPlayer == null) {
                             mediaPlayer = MediaPlayer.create(context, R.raw.music_menu);
@@ -139,7 +139,7 @@ public class Options extends Scene {
 
                 } else if (pulsa(rVibration, event)) {
                     if (withSound) {
-                        efectos.play(selection, vol, vol, 1, 0, 1);
+                        effects.play(selection, vol, vol, 1, 0, 1);
                     }
                     withVibration = !withVibration;
                     if (withVibration) {
@@ -165,10 +165,10 @@ public class Options extends Scene {
         }
 
         int idPadre = super.onTouchEvent(event);
-        if (idPadre != idEscena) {
+        if (idPadre != idScene) {
             return idPadre;
         }
-        return idEscena;
+        return idScene;
     }
 
 }

@@ -15,50 +15,45 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.audioManager;
-import static com.example.came.cameselleabreujavier_proyecto.MainActivity.mediaPlayer;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
 
 public class Scene {
     Context context;
-    int idEscena;
-    int anchoPantalla, altoPantalla;
-    Bitmap fondo;
-    Paint pTexto, pTexto2, pBoton, pBoton2;
+    int idScene;
+    int screenWidth, screenHeight;
+    Bitmap background;
+    Paint pText, pText2;
     Rect rMenu;
     Bitmap bmGoBack;
-    SoundPool efectos;
+    SoundPool effects;
     int selection, maxSonidosSimultaneos = 2, vol;
     SharedPreferences preferences;
 
-    public Scene(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
+    public Scene(Context context, int idScene, int screenWidth, int screenHeight) {
         this.context = context;
-        this.idEscena = idEscena;
-        this.anchoPantalla = anchoPantalla;
-        this.altoPantalla = altoPantalla;
+        this.idScene = idScene;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
         preferences = context.getSharedPreferences("aa", Context.MODE_PRIVATE);
 
         this.bmGoBack = BitmapFactory.decodeResource(context.getResources(), R.drawable.go_back);
-        this.bmGoBack = Bitmap.createScaledBitmap(bmGoBack, anchoPantalla / 8, altoPantalla / 7, false);
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg);
-        fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);
+        this.bmGoBack = Bitmap.createScaledBitmap(bmGoBack, screenWidth / 8, screenHeight / 7, false);
+        background = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg);
+        background = Bitmap.createScaledBitmap(background, screenWidth, screenHeight, false);
 
-        pTexto = new Paint();
-        pTexto2 = new Paint();
+        pText = new Paint();
+        pText2 = new Paint();
 
-        pTexto.setColor(Color.RED);
-        pTexto.setTextAlign(Paint.Align.CENTER);
-        pTexto.setTextSize((int) (altoPantalla / 12));
-        pTexto2.setColor(Color.GREEN);
-        pTexto2.setTextAlign(Paint.Align.CENTER);
-        pTexto2.setTextSize(altoPantalla / 5);
-        pTexto.setColor(Color.BLUE);
-        pBoton = new Paint();
-        pBoton.setColor(Color.LTGRAY);
-        pBoton2 = new Paint();
-        pBoton2.setColor(Color.LTGRAY);
+        pText.setColor(Color.RED);
+        pText.setTextAlign(Paint.Align.CENTER);
+        pText.setTextSize((int) (screenHeight / 12));
+        pText2.setColor(Color.WHITE);
+        pText2.setTextAlign(Paint.Align.CENTER);
+        pText2.setTextSize(screenHeight / 5);
+        pText.setColor(Color.BLUE);
 
 
-        rMenu = new Rect(anchoPantalla - anchoPantalla / 8, 0, anchoPantalla, altoPantalla / 7);
+        rMenu = new Rect(screenWidth - screenWidth / 8, 0, screenWidth, screenHeight / 7);
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         if (vol == 0) {
@@ -70,11 +65,11 @@ public class Scene {
             SoundPool.Builder spb = new SoundPool.Builder();
             spb.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
             spb.setMaxStreams(maxSonidosSimultaneos);
-            this.efectos = spb.build();
+            this.effects = spb.build();
         } else {
-            this.efectos = new SoundPool(maxSonidosSimultaneos, AudioManager.STREAM_MUSIC, 0);
+            this.effects = new SoundPool(maxSonidosSimultaneos, AudioManager.STREAM_MUSIC, 0);
         }
-        selection = efectos.load(context, R.raw.select_menu_effect, 1);
+        selection = effects.load(context, R.raw.select_menu_effect, 1);
 
     }
 
@@ -95,9 +90,9 @@ public class Scene {
 
             case MotionEvent.ACTION_UP:// Al levantar el último dedo
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
-                if (pulsa(rMenu, event) && idEscena != 0) {
+                if (pulsa(rMenu, event) && idScene != 0) {
                     if (withSound) {
-                        efectos.play(selection, vol, vol, 1, 0, 1);
+                        effects.play(selection, vol, vol, 1, 0, 1);
                     }
                     return 0;
                 }
@@ -110,7 +105,7 @@ public class Scene {
                 Log.i("Otra acción", "Acción no definida: " + accion);
 
         }
-        return idEscena;
+        return idScene;
     }
 
     public void actualizarFisica() {
@@ -118,8 +113,7 @@ public class Scene {
     }
 
     public void dibujar(Canvas c) {
-        if (idEscena != 0) {
-//            c.drawRect(rMenu, pBoton);
+        if (idScene != 0) {
             c.drawBitmap(bmGoBack, rMenu.centerX() - bmGoBack.getWidth() / 2, rMenu.centerY() - bmGoBack.getHeight() / 2, null);
         }
     }
@@ -133,28 +127,28 @@ public class Scene {
         this.context = context;
     }
 
-    public int getIdEscena() {
-        return idEscena;
+    public int getIdScene() {
+        return idScene;
     }
 
-    public void setIdEscena(int idEscena) {
-        this.idEscena = idEscena;
+    public void setIdScene(int idScene) {
+        this.idScene = idScene;
     }
 
-    public int getAnchoPantalla() {
-        return anchoPantalla;
+    public int getScreenWidth() {
+        return screenWidth;
     }
 
-    public void setAnchoPantalla(int anchoPantalla) {
-        this.anchoPantalla = anchoPantalla;
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
     }
 
-    public int getAltoPantalla() {
-        return altoPantalla;
+    public int getScreenHeight() {
+        return screenHeight;
     }
 
-    public void setAltoPantalla(int altoPantalla) {
-        this.altoPantalla = altoPantalla;
+    public void setScreenHeight(int screenHeight) {
+        this.screenHeight = screenHeight;
     }
 
 }

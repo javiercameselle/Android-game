@@ -9,10 +9,17 @@
     <string name="vibration">Vibration</string>
     <string name="distance">Distance</string>
     <string name="thanks">Thanks to:</string>
-    <string name="gameicons">Game-icons.net, noiseforfun.com and iconarchive.com for the most game icons and sound.</string>
-    <string name="opengameart">Opengameart.com for using their textures and sprites to animations.</string>
-    <string name="teacher">My teacher, Javi Conde, for the patience and to resolve my doubts.</string>
-    <string name="people">All the people who tried to play the game in its differents versions.</string>
-    <string name="name">Javier Cameselle</string>
-    <string name="submit">Sumbit</string>
+    <string name="gameicons">Game icons</string>
+    <string name="textures">Textures and character animations</string>
+    <string name="people">People who had supported me and tried the game.</string>
+    <string name="name" translatable="false">Javier Cameselle</string>
+    <string name="submit">Save record</string>
+    <string name="options_help">Differents options for the game</string>
+    <string name="game_help">Screen where we are going to play. It have to run and jump obstacles to reach the longest distance record.</string>
+    <string name="save_help">Screen to save the player\'s distance</string>
+    <string name="menu_help">Main menu where you can play, see the records, credits, exit, access to help menu or options screen</string>
+    <string name="records_help">Game records can be seen on this screen</string>
+    <string name="music_sounds">Music and sounds effects</string>
+    <string name="social_media">Social media   IG:@jcameselle97</string>
+    <string name="author">Author</string>
 </resources>

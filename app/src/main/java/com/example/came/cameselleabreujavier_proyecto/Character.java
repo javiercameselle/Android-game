@@ -83,7 +83,7 @@ public class Character {
     }
 
     public void dibujar(Canvas c) {
-        if (!dead && System.currentTimeMillis() - metresTime > 500 &&!pause) {
+        if (!dead && System.currentTimeMillis() - metresTime > 500 && !pause) {
             setMetres(getMetres() + 1);
             metresTime = System.currentTimeMillis();
         }
@@ -96,7 +96,7 @@ public class Character {
         }
         if (jumping && !dead) {
             c.drawBitmap(bmJump[index], posX, posY, p);
-            c.drawRect(rectPersonaje, p);
+//            c.drawRect(rectPersonaje, p);
         } else if (jumping && dead) {
             c.drawBitmap(bmDead[index], posX, posY, p);
         } else {

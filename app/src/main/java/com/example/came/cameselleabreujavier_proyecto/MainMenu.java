@@ -40,8 +40,8 @@ public class MainMenu extends Scene {
     public MainMenu(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
         super(context, idEscena, anchoPantalla, altoPantalla);
 
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.moon_background);
-        fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, false);
+        background = BitmapFactory.decodeResource(context.getResources(), R.drawable.moon_background);
+        background = Bitmap.createScaledBitmap(background, anchoPantalla, altoPantalla, false);
 
         imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);
         imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, anchoPantalla, altoPantalla, false);
@@ -151,7 +151,7 @@ public class MainMenu extends Scene {
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
                 if (pulsa(juego, event)) {
                     if (withSound) {
-                        efectos.play(selection, vol, vol, 1, 0, 1);
+                        effects.play(selection, vol, vol, 1, 0, 1);
                         mediaPlayer.stop();
                         musicStarted = false;
                     }
@@ -165,23 +165,23 @@ public class MainMenu extends Scene {
                     return 1;
                 } else if (pulsa(ayuda, event)) {
                     if (withSound)
-                        efectos.play(selection, vol, vol, 1, 0, 1);
+                        effects.play(selection, vol, vol, 1, 0, 1);
                     return 2;
                 } else if (pulsa(records, event)) {
                     if (withSound)
-                        efectos.play(selection, vol, vol, 1, 0, 1);
+                        effects.play(selection, vol, vol, 1, 0, 1);
                     return 3;
                 } else if (pulsa(opciones, event)) {
                     if (withSound)
-                        efectos.play(selection, vol, vol, 1, 0, 1);
+                        effects.play(selection, vol, vol, 1, 0, 1);
                     return 4;
                 } else if (pulsa(creditos, event)) {
                     if (withSound)
-                        efectos.play(selection, vol, vol, 1, 0, 1);
+                        effects.play(selection, vol, vol, 1, 0, 1);
                     return 5;
                 } else if (pulsa(exit, event)) {
                     if (withSound) {
-                        efectos.play(selection, vol, vol, 1, 0, 1);
+                        effects.play(selection, vol, vol, 1, 0, 1);
                     }
                     System.exit(0);
                 }
@@ -194,7 +194,7 @@ public class MainMenu extends Scene {
             default:
                 Log.i("Otra acción", "Acción no definida: " + accion);
         }
-        return idEscena;
+        return idScene;
     }
 
     public void actualizarFisica() {
@@ -207,7 +207,7 @@ public class MainMenu extends Scene {
     public void dibujar(Canvas c) {
         try {
 //            capa.dibujar(c);
-            c.drawBitmap(fondo, 0, 0, null);
+            c.drawBitmap(background, 0, 0, null);
             if (arrayClouds.get(0).isBack()) {
                 for (Cloud cd : arrayClouds) {
                     cd.dibujar(c);
@@ -223,17 +223,17 @@ public class MainMenu extends Scene {
             c.drawBitmap(imgPlay, juego.centerX() - imgPlay.getWidth() / 2, juego.centerY() - imgPlay.getHeight() / 2, null);
 //            c.drawRect(ayuda,p);
             c.drawBitmap(imgHelp, ayuda.centerX() - imgHelp.getWidth() / 2, ayuda.centerY() - imgHelp.getHeight() / 2, null);
-//            c.drawText(context.getString(R.string.play), juego.centerX(), juego.centerY() + alto / 3, pTexto);
+//            c.drawText(context.getString(R.string.play), juego.centerX(), juego.centerY() + alto / 3, pText);
 //            c.drawRect(creditos, p);
 //            c.drawBitmap(imgCréditos2, creditos.centerX() - imgCréditos.getWidth() / 2, creditos.centerY() - imgCréditos.getHeight() / 2, null);
             c.drawBitmap(imgCréditos, creditos.centerX() - imgCréditos.getWidth() / 2, creditos.centerY() - imgCréditos.getHeight() / 2, null);
-//            c.drawText(context.getString(R.string.credits), creditos.centerX(), creditos.centerY() + alto / 3, pTexto);
+//            c.drawText(context.getString(R.string.credits), creditos.centerX(), creditos.centerY() + alto / 3, pText);
 //            c.drawRect(records, p);
             c.drawBitmap(imgRecords, records.centerX() - imgRecords.getWidth() / 2, records.centerY() - imgRecords.getHeight() / 2, null);
-//            c.drawText(context.getString(R.string.records), records.centerX(), records.centerY() + alto / 3, pTexto);
+//            c.drawText(context.getString(R.string.records), records.centerX(), records.centerY() + alto / 3, pText);
 //            c.drawRect(opciones, p);
             c.drawBitmap(imgOptions, opciones.centerX() - imgOptions.getWidth() / 2, opciones.centerY() - imgOptions.getHeight() / 2, null);
-//            c.drawText(context.getString(R.string.options), opciones.centerX(), opciones.centerY() + alto / 3, pTexto);
+//            c.drawText(context.getString(R.string.options), opciones.centerX(), opciones.centerY() + alto / 3, pText);
             c.drawBitmap(imgExit, exit.centerX() - imgExit.getWidth() / 2, exit.centerY() - imgExit.getHeight() / 2, null);
         } catch (Exception e) {
             Log.e("ERROR AL DIBUJAR", e.getLocalizedMessage());

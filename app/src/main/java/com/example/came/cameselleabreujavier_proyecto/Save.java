@@ -83,7 +83,7 @@ public class Save extends Scene {
 
     public void dibujar(Canvas c) {
         c.drawColor(Color.argb(50, 255, 255, 204));
-//        c.drawBitmap(fondo, 0, 0, null);
+//        c.drawBitmap(background, 0, 0, null);
 
 //        Log.i("xxxx", "METROS:" + metres + "  - ancho:" + screenWidth + " - alto:" + screenHeight + " - ancho/10:" + screenWidth / 10 + " - alto/10:" + screenHeight);
         c.drawBitmap(up, flUp.centerX() - up.getWidth() / 2, flUp.centerY() - up.getHeight() / 2, null);
@@ -187,10 +187,10 @@ public class Save extends Scene {
         }
 
         int idPadre = super.onTouchEvent(event);
-        if (idPadre != idEscena) {
+        if (idPadre != idScene) {
             return idPadre;
         }
-        return idEscena;
+        return idScene;
     }
 
 }

@@ -33,7 +33,7 @@ public class SceneControl extends SurfaceView implements SurfaceHolder.Callback 
     public boolean onTouchEvent(MotionEvent event) {
         synchronized (surfaceHolder) {
             int newScene = actualScene.onTouchEvent(event);
-            if (newScene != actualScene.idEscena) {
+            if (newScene != actualScene.idScene) {
                 switch (newScene) {
                     case 0:
                         actualScene = new MainMenu(context, 0, screenWidth, screenHeight);
