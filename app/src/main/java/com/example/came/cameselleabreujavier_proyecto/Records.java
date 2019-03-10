@@ -17,6 +17,10 @@ import java.util.HashMap;
 
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.faw;
 
+/**
+ * Three best records are shown on screen
+ */
+
 public class Records extends Scene {
 
     private Bitmap imgBuildingsShadow;//Building image

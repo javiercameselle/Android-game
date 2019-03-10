@@ -14,6 +14,10 @@ import java.util.Locale;
 
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.faw;
 
+/**
+ * Game screenshots are shown to help player
+ */
+
 public class Help extends Scene {
 
     private Bitmap imgMenu;//Main menu screenshot

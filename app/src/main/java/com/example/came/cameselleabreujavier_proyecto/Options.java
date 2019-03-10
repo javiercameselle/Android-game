@@ -21,6 +21,10 @@ import static com.example.came.cameselleabreujavier_proyecto.MainActivity.musicS
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withVibration;
 
+/**
+ * Options game
+ */
+
 public class Options extends Scene {
 
     private Bitmap imgBuildingsShadow;//Buildings image
@@ -28,8 +32,8 @@ public class Options extends Scene {
     private Bitmap imgSoundOff;//Sound off icon
     private Bitmap imgVibrationOn;//Vibration on icon
     private Bitmap imgVibrationOff;//Vibration off icon
-    private Rect rSonido, rVibration;//Buttons rectangles to set sound on/off and vibration on/off
-    private Paint pText, pBoton;//Buttons mpodifiers
+    private Rect rSound, rVibration;//Buttons rectangles to set sound on/off and vibration on/off
+    private Paint pText, pBoton;//Buttons modifiers
     private Utils u;//Utils class
     private int widthAux, heightAux;//Divided screen measures
     private Vibrator vibrator;//Allow to vibrate
@@ -78,7 +82,7 @@ public class Options extends Scene {
         pBoton.setStyle(Paint.Style.STROKE);
         pBoton.setStrokeWidth(5);
 
-        rSonido = new Rect(widthAux * 5, heightAux + u.getDpH(50), widthAux * 7, heightAux * 3);
+        rSound = new Rect(widthAux * 5, heightAux + u.getDpH(50), widthAux * 7, heightAux * 3);
         rVibration = new Rect(widthAux * 5, heightAux * 4 + u.getDpH(50), widthAux * 7, heightAux * 6);
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -98,11 +102,11 @@ public class Options extends Scene {
             c.drawBitmap(background, 0, 0, null);
             c.drawBitmap(imgBuildingsShadow, 0, 0, null);
             c.drawText(context.getString(R.string.sound), widthAux * 2, heightAux * 3, pText);
-//            c.drawRect(rSonido, pBoton);
+//            c.drawRect(rSound, pBoton);
             if (withSound) {
-                c.drawBitmap(imgSoundOn, rSonido.centerX() - imgSoundOn.getWidth() / 2, rSonido.centerY() - imgSoundOn.getHeight() / 2, null);
+                c.drawBitmap(imgSoundOn, rSound.centerX() - imgSoundOn.getWidth() / 2, rSound.centerY() - imgSoundOn.getHeight() / 2, null);
             } else {
-                c.drawBitmap(imgSoundOff, rSonido.centerX() - imgSoundOff.getWidth() / 2, rSonido.centerY() - imgSoundOff.getHeight() / 2, null);
+                c.drawBitmap(imgSoundOff, rSound.centerX() - imgSoundOff.getWidth() / 2, rSound.centerY() - imgSoundOff.getHeight() / 2, null);
             }
             c.drawText(context.getString(R.string.vibration), widthAux, heightAux * 6, pText);
 //            c.drawRect(rVibration, pBoton);
@@ -146,7 +150,7 @@ public class Options extends Scene {
                 break;
 
             case MotionEvent.ACTION_UP:                     // Al levantar el último dedo
-                if (pulsa(rSonido, event)) {
+                if (pulsa(rSound, event)) {
                     if (!withSound) {
                         effects.play(selection, vol, vol, 1, 0, 1);
 

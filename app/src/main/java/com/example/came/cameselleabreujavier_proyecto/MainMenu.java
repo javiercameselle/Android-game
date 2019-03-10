@@ -21,6 +21,10 @@ import static com.example.came.cameselleabreujavier_proyecto.MainActivity.musicS
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withVibration;
 
+/**
+ * Main menu shows different options of the game to choose
+ */
+
 public class MainMenu extends Scene {
 
     private Paint p;//Buttons modifiers

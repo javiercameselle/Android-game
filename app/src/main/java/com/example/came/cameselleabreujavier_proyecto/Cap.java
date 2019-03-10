@@ -7,6 +7,10 @@ import android.graphics.PointF;
 
 import java.util.ArrayList;
 
+/**
+ * Set cap properties
+ */
+
 public class Cap {
 
     private ArrayList<ImageCap> imgCaps = new ArrayList<>(); //Images to show in this cap

@@ -18,6 +18,10 @@ import static com.example.came.cameselleabreujavier_proyecto.MainActivity.audioM
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.faw;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
 
+/**
+ * Scene commons properties
+ */
+
 public class Scene {
 
 

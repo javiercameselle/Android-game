@@ -9,6 +9,10 @@ import android.graphics.Rect;
 
 import java.util.ArrayList;
 
+/**
+ * Game obstacles
+ */
+
 public class Obstacle {
 
     private Context context;

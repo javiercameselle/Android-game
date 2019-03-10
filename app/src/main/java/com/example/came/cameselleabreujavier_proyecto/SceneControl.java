@@ -10,6 +10,10 @@ import android.view.SurfaceView;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.mediaPlayer;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
 
+/**
+ * Scenes manager
+ */
+
 public class SceneControl extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder surfaceHolder;      // Draw area manager
     private Context context;                  // Application context

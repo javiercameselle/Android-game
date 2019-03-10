@@ -7,6 +7,9 @@ import android.graphics.Paint;
 
 import java.util.ArrayList;
 
+/**
+ * Game clouds
+ */
 public class Cloud {
 
     private Context context;

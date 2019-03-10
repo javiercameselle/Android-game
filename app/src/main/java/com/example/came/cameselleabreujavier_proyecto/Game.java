@@ -23,6 +23,10 @@ import static com.example.came.cameselleabreujavier_proyecto.MainActivity.musicS
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withVibration;
 
+/**
+ * Game and it components
+ */
+
 public class Game extends Scene {
 
     //    private Cap backgroundCap;

@@ -3,6 +3,10 @@ package com.example.came.cameselleabreujavier_proyecto;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 
+/**
+ * Caps images manage
+ */
+
 public class ImageCap {
     public PointF position; //Image position
     public Bitmap image;    //Image to show

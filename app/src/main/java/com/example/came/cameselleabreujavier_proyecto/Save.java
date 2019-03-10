@@ -14,6 +14,10 @@ import android.view.MotionEvent;
 import static com.example.came.cameselleabreujavier_proyecto.Character.metres;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.faw;
 
+/**
+ * Save game distance
+ */
+
 public class Save extends Scene {
 
     private Utils u;//Utils class

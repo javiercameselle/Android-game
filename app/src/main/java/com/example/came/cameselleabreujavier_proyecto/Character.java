@@ -10,6 +10,10 @@ import android.graphics.Rect;
 import static com.example.came.cameselleabreujavier_proyecto.Game.pause;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.faw;
 
+/**
+ * Game character
+ */
+
 public class Character {
 
     private Context context;

@@ -16,6 +16,10 @@ import java.util.ArrayList;
 
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.faw;
 
+/**
+ * Mention to supporters, game providers, etc.
+ */
+
 public class Credits extends Scene {
 
     private Paint pText;//Text modifier

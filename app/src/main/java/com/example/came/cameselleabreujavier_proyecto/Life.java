@@ -8,6 +8,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+/**
+ * Life to recovery during the game
+ */
+
 public class Life {
     private Bitmap bitmapLife;//Heart icon
     private int posX;//Position on horizontal axis
