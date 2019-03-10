@@ -12,19 +12,29 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import static com.example.came.cameselleabreujavier_proyecto.Character.metres;
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.faw;
 
 public class Save extends Scene {
 
-    private Utils u;
+    private Utils u;//Utils class
     private Context context;
-    private Paint pText, pText2, pRect, pText3;
-    private int screenWidth, screenHeight, flCont, slCont, tlCont;
-    private Bitmap bitmapAux, up, down, bitmapButton,dropDB;
-    private String letter;
-    private Rect flUp, slUp, tlUp, flDown, slDown, tlDown, fl, sl, tl, button,dropTable;
+    private Paint pText, pText2, pRect, pText3;//Text and button modifiers
+    private int screenWidth, screenHeight;
+    private int flCont, slCont, tlCont;//Letter counters
+    private Bitmap up, down, bitmapButton/*, dropDB*/;//Button images
+    private String letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";//Letters to choose
+    private Rect flUp, slUp, tlUp, flDown, slDown, tlDown, fl, sl, tl, button/*, dropTable*/;//Buttons to set letter and to save distance in database and text areas
 
-    public Save(Context context, int idEscena, int screenWidth, int screenHeight) {
-        super(context, idEscena, screenWidth, screenHeight);
+    /**
+     * Initialize save screen components
+     *
+     * @param context      Context
+     * @param idScene      Scene ID
+     * @param screenWidth  Screen width
+     * @param screenHeight Screen height
+     */
+    public Save(Context context, int idScene, int screenWidth, int screenHeight) {
+        super(context, idScene, screenWidth, screenHeight);
         this.context = context;
         u = new Utils(context);
         this.screenWidth = screenWidth;
@@ -32,9 +42,9 @@ public class Save extends Scene {
         bitmapButton = BitmapFactory.decodeResource(context.getResources(), R.drawable.button);
         bitmapButton = Bitmap.createScaledBitmap(bitmapButton, screenWidth * 2 / 10, screenHeight * 2 / 7, false);
         button = new Rect(screenWidth * 7 / 10, screenHeight * 3 / 7, screenWidth * 9 / 10, screenHeight * 5 / 7);
-        dropDB = BitmapFactory.decodeResource(context.getResources(), R.drawable.droptable);
-        dropDB = Bitmap.createScaledBitmap(dropDB, screenWidth/ 10, screenHeight *7, false);
-        dropTable=new Rect(screenWidth*9/10,screenHeight * 6 / 7, screenWidth, screenHeight);
+//        dropDB = BitmapFactory.decodeResource(context.getResources(), R.drawable.droptable);
+//        dropDB = Bitmap.createScaledBitmap(dropDB, screenWidth / 10, screenHeight * 7, false);
+//        dropTable = new Rect(screenWidth * 9 / 10, screenHeight * 6 / 7, screenWidth, screenHeight);
 
         up = BitmapFactory.decodeResource(context.getResources(), R.drawable.up);
         up = Bitmap.createScaledBitmap(up, screenWidth / 10, screenHeight / 8, false);
@@ -54,7 +64,7 @@ public class Save extends Scene {
         tlDown = new Rect(screenWidth * 5 / 10, screenHeight * 5 / 7, screenWidth * 5 / 10 + up.getWidth(), screenHeight * 5 / 7 + up.getHeight());
         tl = new Rect(tlUp.left, tlUp.bottom + u.getDpH(25), tlUp.right, tlDown.top - u.getDpH(25));
         tlCont = 0;
-        letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 
         pRect = new Paint();
         pRect.setColor(Color.GREEN);
@@ -65,22 +75,30 @@ public class Save extends Scene {
         pText.setColor(Color.BLACK);
         pText.setTextSize(u.getDpW(200));
         pText.setTextAlign(Paint.Align.CENTER);
+        pText.setTypeface(faw);
+
+        pText2 = new Paint();
+        pText2.setColor(Color.BLACK);
+        pText2.setTextSize(u.getDpW(100));
+        pText2.setTypeface(faw);
 
         pText3 = new Paint();
         pText3.setColor(Color.BLACK);
         pText3.setTextSize(u.getDpW(100));
         pText3.setTextAlign(Paint.Align.CENTER);
-
-        pText2 = new Paint();
-        pText2.setColor(Color.BLACK);
-        pText2.setTextSize(u.getDpW(100));
-
+        pText3.setTypeface(faw);
 
     }
 
-    public void acualizarFisica() {
+    public void actualizarFisica() {
+
     }
 
+    /**
+     * Paint save screen components
+     *
+     * @param c Canvas
+     */
     public void dibujar(Canvas c) {
         c.drawColor(Color.argb(50, 255, 255, 204));
 //        c.drawBitmap(background, 0, 0, null);
@@ -109,17 +127,28 @@ public class Save extends Scene {
         super.dibujar(c);
     }
 
-    public boolean pulsa(Rect boton, MotionEvent event) {
-        if (boton.contains((int) event.getX(), (int) event.getY())) {
+    /**
+     * Pressed button checker
+     *
+     * @param button Button rectangle
+     * @param event  Action event
+     * @return Button pressed
+     */
+    public boolean pulsa(Rect button, MotionEvent event) {
+        if (button.contains((int) event.getX(), (int) event.getY())) {
             return true;
         } else return false;
     }
 
+    /**
+     * Screen touch control
+     *
+     * @param event Press action
+     * @return Scene ID to change scene
+     */
     public int onTouchEvent(MotionEvent event) {
-        int pointerIndex = event.getActionIndex();        //Obtenemos el índice de la acción
-        int pointerID = event.getPointerId(pointerIndex); //Obtenemos el Id del pointer asociado a la acción
-        int accion = event.getActionMasked();             //Obtenemos el tipo de pulsación
-        switch (accion) {
+        int action = event.getActionMasked();             //Obtenemos el tipo de pulsación
+        switch (action) {
             case MotionEvent.ACTION_DOWN:           // Primer dedo toca
             case MotionEvent.ACTION_POINTER_DOWN:  // Segundo y siguientes tocan
                 break;
@@ -183,12 +212,12 @@ public class Save extends Scene {
 
                 break;
             default:
-                Log.i("Otra acción", "Acción no definida: " + accion);
+                Log.i("Otra acción", "Acción no definida: " + action);
         }
 
-        int idPadre = super.onTouchEvent(event);
-        if (idPadre != idScene) {
-            return idPadre;
+        int idFather = super.onTouchEvent(event);
+        if (idFather != idScene) {
+            return idFather;
         }
         return idScene;
     }

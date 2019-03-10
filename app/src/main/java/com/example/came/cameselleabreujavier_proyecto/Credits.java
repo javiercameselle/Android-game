@@ -14,21 +14,33 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.faw;
+
 public class Credits extends Scene {
 
-    private Paint pText, pTextNameCategory;
-    private Bitmap imgBuildingsShadow;
-    private int posX;
-    private String camID;
-    private ArrayList<Integer> posY;
-    private Utils u;
-    private CameraManager cameraManager;
-    private boolean flash;
-    private int screenWidth, screenHeight;
-    private String[] credits = {"game-icons.net", "noisefuns.com", "iconarchive.com", "opengameart.com", "youtube.com", "BoxCatGames", "SoundBible", "Sara Méndez", "Javier Conde", "Álvaro Cayetano", "Diego Bea", "Pablo Fernández", "Franco Alessandrini"};
+    private Paint pText;//Text modifier
+    private Paint pTextNameCategory;//Text modifier
+    private Bitmap imgBuildingsShadow;//Buildings shadows image
+    private int posX;//Position on horizontal axis
+    private String camID;//Camera ID
+    private ArrayList<Integer> posY;//Different text position on vertical axis
+    private Utils u;//Utils class
+    private CameraManager cameraManager;//Allow to use camera
+    private boolean flash;//Flash (not) enabled
+    private int screenWidth, screenHeight;//Screen measures
+    private String[] credits = {"game-icons.net", "noisefuns.com", "iconarchive.com", "opengameart.com", "youtube.com", "BoxCatGames", "SoundBible", "Sara Mendez", "Javier Conde", "Alvaro Cayetano", "Diego Bea", "Pablo Fernandez", "Franco Alessandrini"};//Credits names
 
-    public Credits(Context context, int idEscena, int screenWidth, int screenHeight) {
-        super(context, idEscena, screenWidth, screenHeight);
+
+    /**
+     * Initialize credits properties
+     *
+     * @param context      Context
+     * @param idScene      Scene ID
+     * @param screenWidth  Screen width
+     * @param screenHeight Screen height
+     */
+    public Credits(Context context, int idScene, int screenWidth, int screenHeight) {
+        super(context, idScene, screenWidth, screenHeight);
         u = new Utils(context);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -64,13 +76,17 @@ public class Credits extends Scene {
         pText.setColor(Color.rgb(253, 236, 166));
         pText.setFakeBoldText(true);
         pText.setTextAlign(Paint.Align.CENTER);
-
+        pText.setTypeface(faw);
         pTextNameCategory = new Paint();
         pTextNameCategory.setTextSize(u.getDpW(70));
         pTextNameCategory.setColor(Color.WHITE);
         pTextNameCategory.setTextAlign(Paint.Align.CENTER);
+        pTextNameCategory.setTypeface(faw);
     }
 
+    /**
+     * Credit text movement manager
+     */
     public void actualizarFisica() {
         for (int i = 0; i < posY.size(); i++) {
             if (posY.get(i) >= u.getDpH(300)) {
@@ -81,6 +97,11 @@ public class Credits extends Scene {
         }
     }
 
+    /**
+     * Paint credits properties on screen
+     *
+     * @param c Canvas
+     */
     public void dibujar(Canvas c) {
         try {
             c.drawBitmap(background, 0, 0, null);
@@ -113,17 +134,28 @@ public class Credits extends Scene {
         }
     }
 
-    public boolean pulsa(Rect boton, MotionEvent event) {
-        if (boton.contains((int) event.getX(), (int) event.getY())) {
+    /**
+     * Pressed button checker
+     *
+     * @param button Button rectangle
+     * @param event  Action event
+     * @return Button pressed
+     */
+    public boolean pulsa(Rect button, MotionEvent event) {
+        if (button.contains((int) event.getX(), (int) event.getY())) {
             return true;
         } else return false;
     }
 
+    /**
+     * Screen touch control
+     *
+     * @param event Press action
+     * @return Scene ID to change scene
+     */
     public int onTouchEvent(MotionEvent event) {
-        int pointerIndex = event.getActionIndex();        //Obtenemos el índice de la acción
-        int pointerID = event.getPointerId(pointerIndex); //Obtenemos el Id del pointer asociado a la acción
-        int accion = event.getActionMasked();             //Obtenemos el tipo de pulsación
-        switch (accion) {
+        int action = event.getActionMasked();             //Obtenemos el tipo de pulsación
+        switch (action) {
             case MotionEvent.ACTION_DOWN:           // Primer dedo toca
             case MotionEvent.ACTION_POINTER_DOWN:  // Segundo y siguientes tocan
                 break;
@@ -143,12 +175,12 @@ public class Credits extends Scene {
 
                 break;
             default:
-                Log.i("Otra acción", "Acción no definida: " + accion);
+                Log.i("Otra acción", "Acción no definida: " + action);
         }
 
-        int idPadre = super.onTouchEvent(event);
-        if (idPadre != idScene) {
-            return idPadre;
+        int idFather = super.onTouchEvent(event);
+        if (idFather != idScene) {
+            return idFather;
         }
         return idScene;
     }

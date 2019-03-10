@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.VibrationEffect;
@@ -24,48 +23,66 @@ import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withVi
 
 public class MainMenu extends Scene {
 
-    private Paint p;
-    private ArrayList<Cloud> arrayClouds;
-    private Rect ayuda, opciones, records, juego, creditos, exit;
-    private int ancho, ancho2, alto, altoPantalla, anchoPantalla, fin;
-    private Bitmap imgBuildingsShadow, imgCloud, imgPlay, imgOptions, imgHelp, imgRecords, imgCréditos, imgExit;
-    private ArrayList<Bitmap> fondos, bmClouds;
-    private AudioManager audioManager;
-    private Vibrator vibrator;
-    private Cap capa;
+    private Paint p;//Buttons modifiers
+    private ArrayList<Cloud> arrayClouds;//Clouds array
+    private Rect help;//Button help
+    private Rect options;//Button options
+    private Rect records;//Button recorsds
+    private Rect game;//Button play game
+    private Rect credits;//Button credits
+    private Rect exit;//Button exit
+    private int width;//Divided screen width measure
+    private int width2;//Other divided screen width measure
+    private int height;//Divided screen height measure
+    private int screenWidth;//Screen width
+    private int screenHeight;//Screen height
+    private int end;//Number of clouds in main menu
+    private Bitmap imgBuildingsShadow;//Buildings image
+    private Bitmap imgCloud;//Cloud image
+    private Bitmap imgPlay;//Play game icon
+    private Bitmap imgOptions;//Options icon
+    private Bitmap imgHelp;//Help icon
+    private Bitmap imgRecords;//Records icon
+    private Bitmap imgCredits;//Credits icon
+    private Bitmap imgExit;//Exit icon
+    private ArrayList<Bitmap> bmClouds;//Cloud images array
+    private Vibrator vibrator;//Allow to vibrate
     /**/
-    final private int maxSonidosSimultaneos = 10;
+    final private int maxSimultaneousSounds = 10;
     /**/
 
-    public MainMenu(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
-        super(context, idEscena, anchoPantalla, altoPantalla);
-
+    /**
+     * Iniatilize main menu components and properties
+     *
+     * @param context      Context
+     * @param idScene      Scene ID
+     * @param screenWidth  Screen width
+     * @param screenHeight Screen height
+     */
+    public MainMenu(Context context, int idScene, int screenWidth, int screenHeight) {
+        super(context, idScene, screenWidth, screenHeight);
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
         background = BitmapFactory.decodeResource(context.getResources(), R.drawable.moon_background);
-        background = Bitmap.createScaledBitmap(background, anchoPantalla, altoPantalla, false);
+        background = Bitmap.createScaledBitmap(background, screenWidth, screenHeight, false);
 
         imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings);
-        imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, anchoPantalla, altoPantalla, false);
-//parallax
-//        fondos = new ArrayList<>();
-//        fondos.add(imgBuildingsShadow);
-//        fondos.add(imgBuildingsShadow);
-//        capa = new Cap(context, screenWidth, screenHeight, fondos);
-//        capa.setVelocidad(-10);
+        imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, screenWidth, screenHeight, false);
 
         bmClouds = new ArrayList<>();
         arrayClouds = new ArrayList<>();
-        fin = (int) (Math.random() * 10 + 2);
+        end = (int) (Math.random() * 10 + 2);
         imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.little_cloud);
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 7, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 7, false));
         imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_cloud);
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 5, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 5, false));
         imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds_withalpha);
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
-        for (int i = 0; i < fin; i++) {
-            arrayClouds.add(new Cloud(context, anchoPantalla, altoPantalla, bmClouds));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 7, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 7, false));
+        for (int i = 0; i < end; i++) {
+            arrayClouds.add(new Cloud(context, screenWidth, screenHeight, bmClouds));
         }
 
         p = new Paint();
@@ -74,33 +91,33 @@ public class MainMenu extends Scene {
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(1);
 
-        alto = altoPantalla / 7;
-        ancho = anchoPantalla / 4;
-        ancho2 = anchoPantalla / 10;
+        height = screenHeight / 7;
+        width = screenWidth / 4;
+        width2 = screenWidth / 10;
 
-//            ayuda = new Rect(ancho, alto * 6, ancho * 2, alto * 7);
-//            opciones = new Rect(ancho2 * 4, alto * 4, ancho2 * 6, alto * 6);
-//            records = new Rect(ancho2 * 7, alto * 4, ancho2 * 9, alto * 6);
-//            creditos = new Rect(ancho2, alto * 4, ancho2 * 3, alto * 6);
+//            help = new Rect(width, height * 6, width * 2, height * 7);
+//            options = new Rect(width2 * 4, height * 4, width2 * 6, height * 6);
+//            records = new Rect(width2 * 7, height * 4, width2 * 9, height * 6);
+//            credits = new Rect(width2, height * 4, width2 * 3, height * 6);
 
-        juego = new Rect(ancho2 * 3, alto, ancho2 * 7, alto * 3);
+        game = new Rect(width2 * 3, height, width2 * 7, height * 3);
         imgPlay = BitmapFactory.decodeResource(context.getResources(), R.drawable.play);
-        imgPlay = Bitmap.createScaledBitmap(imgPlay, anchoPantalla / 4, altoPantalla / 4, false);
-        ayuda = new Rect(ancho2 * 9, alto, ancho2 * 10, alto * 2);
+        imgPlay = Bitmap.createScaledBitmap(imgPlay, screenWidth / 4, screenHeight / 4, false);
+        help = new Rect(width2 * 9, height, width2 * 10, height * 2);
         imgHelp = BitmapFactory.decodeResource(context.getResources(), R.drawable.help);
-        imgHelp = Bitmap.createScaledBitmap(imgHelp, anchoPantalla / 10, altoPantalla / 8, false);
-        opciones = new Rect(ancho2 * 4, alto * 4, ancho2 * 6, alto * 6);
+        imgHelp = Bitmap.createScaledBitmap(imgHelp, screenWidth / 10, screenHeight / 8, false);
+        options = new Rect(width2 * 4, height * 4, width2 * 6, height * 6);
         imgOptions = BitmapFactory.decodeResource(context.getResources(), R.drawable.options);
-        imgOptions = Bitmap.createScaledBitmap(imgOptions, anchoPantalla / 8, altoPantalla / 6, false);
-        records = new Rect(ancho2 * 7, alto * 4, ancho2 * 9, alto * 6);
+        imgOptions = Bitmap.createScaledBitmap(imgOptions, screenWidth / 8, screenHeight / 6, false);
+        records = new Rect(width2 * 7, height * 4, width2 * 9, height * 6);
         imgRecords = BitmapFactory.decodeResource(context.getResources(), R.drawable.trophy_cup);
-        imgRecords = Bitmap.createScaledBitmap(imgRecords, anchoPantalla / 8, altoPantalla / 6, false);
-        creditos = new Rect(ancho2, alto * 4, ancho2 * 3, alto * 6);
-        imgCréditos = BitmapFactory.decodeResource(context.getResources(), R.drawable.team_idea);
-        imgCréditos = Bitmap.createScaledBitmap(imgCréditos, anchoPantalla / 8, altoPantalla / 6, false);
-        exit = new Rect(0, alto, ancho2, alto * 2);
+        imgRecords = Bitmap.createScaledBitmap(imgRecords, screenWidth / 8, screenHeight / 6, false);
+        credits = new Rect(width2, height * 4, width2 * 3, height * 6);
+        imgCredits = BitmapFactory.decodeResource(context.getResources(), R.drawable.team_idea);
+        imgCredits = Bitmap.createScaledBitmap(imgCredits, screenWidth / 8, screenHeight / 6, false);
+        exit = new Rect(0, height, width2, height * 2);
         imgExit = BitmapFactory.decodeResource(context.getResources(), R.drawable.exit);
-        imgExit = Bitmap.createScaledBitmap(imgExit, anchoPantalla / 10, altoPantalla / 8, false);
+        imgExit = Bitmap.createScaledBitmap(imgExit, screenWidth / 10, screenHeight / 8, false);
 
         //Options
         {
@@ -125,19 +142,28 @@ public class MainMenu extends Scene {
         }
     }
 
-
-    public boolean pulsa(Rect boton, MotionEvent event) {
-        if (boton.contains((int) event.getX(), (int) event.getY())) {
+    /**
+     * Pressed button checker
+     *
+     * @param button Button rectangle
+     * @param event  Action event
+     * @return Button pressed
+     */
+    public boolean pulsa(Rect button, MotionEvent event) {
+        if (button.contains((int) event.getX(), (int) event.getY())) {
             return true;
         } else return false;
     }
 
-
+    /**
+     * Screen touch control
+     *
+     * @param event Press action
+     * @return Scene ID to change scene
+     */
     public int onTouchEvent(MotionEvent event) {
-        int pointerIndex = event.getActionIndex();        //Obtenemos el índice de la acción
-        int pointerID = event.getPointerId(pointerIndex); //Obtenemos el Id del pointer asociado a la acción
-        int accion = event.getActionMasked();             //Obtenemos el tipo de pulsación
-        switch (accion) {
+        int action = event.getActionMasked();             //Obtenemos el tipo de pulsación
+        switch (action) {
             case MotionEvent.ACTION_DOWN:// Primer dedo 0
                 try {
 //
@@ -149,7 +175,7 @@ public class MainMenu extends Scene {
 
             case MotionEvent.ACTION_UP:// Al levantar el último dedo
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
-                if (pulsa(juego, event)) {
+                if (pulsa(game, event)) {
                     if (withSound) {
                         effects.play(selection, vol, vol, 1, 0, 1);
                         mediaPlayer.stop();
@@ -163,7 +189,7 @@ public class MainMenu extends Scene {
                         }
                     }
                     return 1;
-                } else if (pulsa(ayuda, event)) {
+                } else if (pulsa(help, event)) {
                     if (withSound)
                         effects.play(selection, vol, vol, 1, 0, 1);
                     return 2;
@@ -171,11 +197,11 @@ public class MainMenu extends Scene {
                     if (withSound)
                         effects.play(selection, vol, vol, 1, 0, 1);
                     return 3;
-                } else if (pulsa(opciones, event)) {
+                } else if (pulsa(options, event)) {
                     if (withSound)
                         effects.play(selection, vol, vol, 1, 0, 1);
                     return 4;
-                } else if (pulsa(creditos, event)) {
+                } else if (pulsa(credits, event)) {
                     if (withSound)
                         effects.play(selection, vol, vol, 1, 0, 1);
                     return 5;
@@ -192,11 +218,14 @@ public class MainMenu extends Scene {
 
                 break;
             default:
-                Log.i("Otra acción", "Acción no definida: " + accion);
+                Log.i("Otra acción", "Acción no definida: " + action);
         }
         return idScene;
     }
 
+    /**
+     * Cloud movement manager
+     */
     public void actualizarFisica() {
 //        capa.mover();
         for (Cloud cd : arrayClouds) {
@@ -204,11 +233,15 @@ public class MainMenu extends Scene {
         }
     }
 
+    /**
+     * Paint main menu components on screen
+     *
+     * @param c Canvas
+     */
     public void dibujar(Canvas c) {
         try {
-//            capa.dibujar(c);
             c.drawBitmap(background, 0, 0, null);
-            if (arrayClouds.get(0).isBack()) {
+            if (arrayClouds.get(0).isBackground()) {
                 for (Cloud cd : arrayClouds) {
                     cd.dibujar(c);
                 }
@@ -219,21 +252,20 @@ public class MainMenu extends Scene {
                     cd.dibujar(c);
                 }
             }
-//            c.drawRect(juego, p);
-            c.drawBitmap(imgPlay, juego.centerX() - imgPlay.getWidth() / 2, juego.centerY() - imgPlay.getHeight() / 2, null);
-//            c.drawRect(ayuda,p);
-            c.drawBitmap(imgHelp, ayuda.centerX() - imgHelp.getWidth() / 2, ayuda.centerY() - imgHelp.getHeight() / 2, null);
-//            c.drawText(context.getString(R.string.play), juego.centerX(), juego.centerY() + alto / 3, pText);
-//            c.drawRect(creditos, p);
-//            c.drawBitmap(imgCréditos2, creditos.centerX() - imgCréditos.getWidth() / 2, creditos.centerY() - imgCréditos.getHeight() / 2, null);
-            c.drawBitmap(imgCréditos, creditos.centerX() - imgCréditos.getWidth() / 2, creditos.centerY() - imgCréditos.getHeight() / 2, null);
-//            c.drawText(context.getString(R.string.credits), creditos.centerX(), creditos.centerY() + alto / 3, pText);
+//            c.drawRect(game, p);
+            c.drawBitmap(imgPlay, game.centerX() - imgPlay.getWidth() / 2, game.centerY() - imgPlay.getHeight() / 2, null);
+//            c.drawRect(help,p);
+            c.drawBitmap(imgHelp, help.centerX() - imgHelp.getWidth() / 2, help.centerY() - imgHelp.getHeight() / 2, null);
+//            c.drawText(context.getString(R.string.play), game.centerX(), game.centerY() + height / 3, pText);
+//            c.drawRect(credits, p);
+            c.drawBitmap(imgCredits, credits.centerX() - imgCredits.getWidth() / 2, credits.centerY() - imgCredits.getHeight() / 2, null);
+//            c.drawText(context.getString(R.string.credits), credits.centerX(), credits.centerY() + height / 3, pText);
 //            c.drawRect(records, p);
             c.drawBitmap(imgRecords, records.centerX() - imgRecords.getWidth() / 2, records.centerY() - imgRecords.getHeight() / 2, null);
-//            c.drawText(context.getString(R.string.records), records.centerX(), records.centerY() + alto / 3, pText);
-//            c.drawRect(opciones, p);
-            c.drawBitmap(imgOptions, opciones.centerX() - imgOptions.getWidth() / 2, opciones.centerY() - imgOptions.getHeight() / 2, null);
-//            c.drawText(context.getString(R.string.options), opciones.centerX(), opciones.centerY() + alto / 3, pText);
+//            c.drawText(context.getString(R.string.records), records.centerX(), records.centerY() + height / 3, pText);
+//            c.drawRect(options, p);
+            c.drawBitmap(imgOptions, options.centerX() - imgOptions.getWidth() / 2, options.centerY() - imgOptions.getHeight() / 2, null);
+//            c.drawText(context.getString(R.string.options), options.centerX(), options.centerY() + height / 3, pText);
             c.drawBitmap(imgExit, exit.centerX() - imgExit.getWidth() / 2, exit.centerY() - imgExit.getHeight() / 2, null);
         } catch (Exception e) {
             Log.e("ERROR AL DIBUJAR", e.getLocalizedMessage());

@@ -15,17 +15,32 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.faw;
+
 public class Records extends Scene {
 
-    private Bitmap imgBuildingsShadow, imgGold, imgSilver, imgBronze, imgMedal, imgDrop;
-    private ArrayList<String> names;
-    private ArrayList<Integer> distances;
+    private Bitmap imgBuildingsShadow;//Building image
+    //    private Bitmap imgGold;
+//    private Bitmap imgSilver;
+//    private Bitmap imgBronze;
+    private Bitmap imgMedal;//Medal image
+    //    private Bitmap imgDrop;
+    private ArrayList<String> names;//Database player names
+    private ArrayList<Integer> distances;//Database distances
     private int screenWidth, screenHeight;
-    private Utils u;
-    private Paint pText, pRect1, pRect2, pRect3;
-    private Rect rectFirst, rectSecond, rectThird, rectDrop;
+    private Utils u;//Utils class
+    private Paint pText, pRect1, pRect2, pRect3;//Text and podium areas modifiers
+    private Rect rectFirst, rectSecond, rectThird, rectDrop;//Podium areas
 //    private boolean dropped;
 
+    /**
+     * Initialize records screen componets
+     *
+     * @param context      Context
+     * @param idScene      Scene ID
+     * @param screenWidth  Screen width
+     * @param screenHeight Screen height
+     */
     public Records(Context context, int idScene, int screenWidth, int screenHeight) {
         super(context, idScene, screenWidth, screenHeight);
         this.screenWidth = screenWidth;
@@ -45,6 +60,7 @@ public class Records extends Scene {
         this.pText.setColor(Color.BLACK);
         this.pText.setTextAlign(Paint.Align.CENTER);
         this.pText.setTextSize(u.getDpW(70));
+        this.pText.setTypeface(faw);
 
         this.pRect1 = new Paint();
         this.pRect1.setColor(Color.rgb(245, 208, 111));
@@ -103,6 +119,11 @@ public class Records extends Scene {
 
     }
 
+    /**
+     * Paint records screen components
+     *
+     * @param c Canvas
+     */
     public void dibujar(Canvas c) {
         try {
             c.drawBitmap(background, 0, 0, null);
@@ -140,24 +161,35 @@ public class Records extends Scene {
 
     }
 
-    public boolean pulsa(Rect boton, MotionEvent event) {
-        if (boton.contains((int) event.getX(), (int) event.getY())) {
+    /**
+     * Pressed button checker
+     *
+     * @param button Button rectangle
+     * @param event  Action event
+     * @return Button pressed
+     */
+    public boolean pulsa(Rect button, MotionEvent event) {
+        if (button.contains((int) event.getX(), (int) event.getY())) {
             return true;
         } else return false;
     }
 
+    /**
+     * Screen touch control
+     *
+     * @param event Press action
+     * @return Scene ID to change scene
+     */
     public int onTouchEvent(MotionEvent event) {
-        int pointerIndex = event.getActionIndex();        //Obtenemos el índice de la acción
-        int pointerID = event.getPointerId(pointerIndex); //Obtenemos el Id del pointer asociado a la acción
-        int accion = event.getActionMasked();             //Obtenemos el tipo de pulsación
-        switch (accion) {
+        int action = event.getActionMasked();             //Obtenemos el tipo de pulsación
+        switch (action) {
             case MotionEvent.ACTION_DOWN:           // Primer dedo toca
             case MotionEvent.ACTION_POINTER_DOWN:  // Segundo y siguientes tocan
                 break;
 
             case MotionEvent.ACTION_UP:                     // Al levantar el último dedo
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
-                if (pulsa(rectDrop, event)) {
+//                if (pulsa(rectDrop, event)) {
 //                    TO IMPLEMENT
 //                    DataBase db = new DataBase(context, "records", null, 1);
 //                    SQLiteDatabase database = db.getWritableDatabase();
@@ -167,7 +199,7 @@ public class Records extends Scene {
 //                        database.close();
 //                    }
 //                    dropped = true;
-                }
+//                }
 
                 break;
 
@@ -176,12 +208,12 @@ public class Records extends Scene {
 
                 break;
             default:
-                Log.i("Otra acción", "Acción no definida: " + accion);
+                Log.i("Otra acción", "Acción no definida: " + action);
         }
 
-        int idPadre = super.onTouchEvent(event);
-        if (idPadre != idScene) {
-            return idPadre;
+        int idFather = super.onTouchEvent(event);
+        if (idFather != idScene) {
+            return idFather;
         }
         return idScene;
     }

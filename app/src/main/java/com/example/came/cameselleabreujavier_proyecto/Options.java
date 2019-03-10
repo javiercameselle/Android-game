@@ -15,6 +15,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import static com.example.came.cameselleabreujavier_proyecto.MainActivity.faw;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.mediaPlayer;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.musicStarted;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
@@ -22,25 +23,37 @@ import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withVi
 
 public class Options extends Scene {
 
-    private Bitmap imgBuildingsShadow, imgSoundOn, imgSoundOff, imgVibrationOn, imgVibrationOff;
-    private Rect rSonido, rVibration;
-    private Paint pText, pBoton;
-    Utils u;
-    private int widthAux, heightAux;
-    private Vibrator vibrator;
-    private SharedPreferences.Editor editor = preferences.edit();
+    private Bitmap imgBuildingsShadow;//Buildings image
+    private Bitmap imgSoundOn;//Sound on icon
+    private Bitmap imgSoundOff;//Sound off icon
+    private Bitmap imgVibrationOn;//Vibration on icon
+    private Bitmap imgVibrationOff;//Vibration off icon
+    private Rect rSonido, rVibration;//Buttons rectangles to set sound on/off and vibration on/off
+    private Paint pText, pBoton;//Buttons mpodifiers
+    private Utils u;//Utils class
+    private int widthAux, heightAux;//Divided screen measures
+    private Vibrator vibrator;//Allow to vibrate
+    private SharedPreferences.Editor editor = preferences.edit();//Allow to modify shared preferences, that save sounds and vibration options
 
-    public Options(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
-        super(context, idEscena, anchoPantalla, altoPantalla);
+    /**
+     * Initialize options screen components
+     *
+     * @param context      Context
+     * @param idScene      Scene ID
+     * @param screenWidth  Screen width
+     * @param screenHeight Screen height
+     */
+    public Options(Context context, int idScene, int screenWidth, int screenHeight) {
+        super(context, idScene, screenWidth, screenHeight);
         u = new Utils(context);
         background = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg);
-        background = Bitmap.createScaledBitmap(background, anchoPantalla, altoPantalla, false);
+        background = Bitmap.createScaledBitmap(background, screenWidth, screenHeight, false);
 
         imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings2);
-        imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, anchoPantalla, altoPantalla, false);
+        imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, screenWidth, screenHeight, false);
 
-        widthAux = anchoPantalla / 9;
-        heightAux = altoPantalla / 9;
+        widthAux = screenWidth / 9;
+        heightAux = screenHeight / 9;
 
         imgSoundOn = BitmapFactory.decodeResource(context.getResources(), R.drawable.sound_on);
         imgSoundOn = Bitmap.createScaledBitmap(imgSoundOn, widthAux * 2, heightAux * 2, false);
@@ -57,6 +70,7 @@ public class Options extends Scene {
         pText = new Paint();
         pText.setColor(Color.WHITE);
         pText.setTextSize(u.getDpW(200));
+        pText.setTypeface(faw);
 
         pBoton = new Paint();
 //        pBoton.setAlpha(50);
@@ -74,6 +88,11 @@ public class Options extends Scene {
 
     }
 
+    /**
+     * Paint options on screen
+     *
+     * @param c Canvas
+     */
     public void dibujar(Canvas c) {
         try {
             c.drawBitmap(background, 0, 0, null);
@@ -100,17 +119,28 @@ public class Options extends Scene {
 
     }
 
-    public boolean pulsa(Rect boton, MotionEvent event) {
-        if (boton.contains((int) event.getX(), (int) event.getY())) {
+    /**
+     * Pressed button checker
+     *
+     * @param button Button rectangle
+     * @param event  Action event
+     * @return Button pressed
+     */
+    public boolean pulsa(Rect button, MotionEvent event) {
+        if (button.contains((int) event.getX(), (int) event.getY())) {
             return true;
         } else return false;
     }
 
+    /**
+     * Screen touch control
+     *
+     * @param event Press action
+     * @return Scene ID to change scene
+     */
     public int onTouchEvent(MotionEvent event) {
-        int pointerIndex = event.getActionIndex();        //Obtenemos el índice de la acción
-        int pointerID = event.getPointerId(pointerIndex); //Obtenemos el Id del pointer asociado a la acción
-        int accion = event.getActionMasked();             //Obtenemos el tipo de pulsación
-        switch (accion) {
+        int action = event.getActionMasked();             //Obtenemos el tipo de pulsación
+        switch (action) {
             case MotionEvent.ACTION_DOWN:           // Primer dedo toca
             case MotionEvent.ACTION_POINTER_DOWN:  // Segundo y siguientes tocan
                 break;
@@ -133,7 +163,7 @@ public class Options extends Scene {
                         mediaPlayer.pause();
                         withSound = false;
                     }
-                    Log.i("xxxxSOUNDmenu", withSound+"");
+                    Log.i("xxxxSOUNDmenu", withSound + "");
                     editor.putBoolean("sound", withSound);
                     editor.commit();
 
@@ -161,12 +191,12 @@ public class Options extends Scene {
 
                 break;
             default:
-                Log.i("Otra acción", "Acción no definida: " + accion);
+                Log.i("Otra acción", "Acción no definida: " + action);
         }
 
-        int idPadre = super.onTouchEvent(event);
-        if (idPadre != idScene) {
-            return idPadre;
+        int idFather = super.onTouchEvent(event);
+        if (idFather != idScene) {
+            return idFather;
         }
         return idScene;
     }

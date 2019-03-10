@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 //import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withVibration;
 
 public class DataBase extends SQLiteOpenHelper {
-    String sqlCreateTableRecords = "CREATE TABLE records (name TEXT,distance INTEGER)";
+    String sqlCreateTableRecords = "CREATE TABLE records (name TEXT,distance INTEGER)";//Query to create table
 //    String sqlCreateTableOptions = "CREATE TABLE options (sound  INTEGER,vibration  INTEGER)";
 
     public DataBase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -18,7 +18,7 @@ public class DataBase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(sqlCreateTableRecords);
-        db.execSQL("INSERT INTO records (name,distance) values ('man',125)");
+        db.execSQL("INSERT INTO records (name,distance) values ('EXP',125)");
 //        db.execSQL(sqlCreateTableOptions);
 //        db.execSQL("INSERT INTO options (sound,vibration) values (" + ((withSound==true)?1:0) + "," + ((withVibration==true)?1:0) + ")");
     }

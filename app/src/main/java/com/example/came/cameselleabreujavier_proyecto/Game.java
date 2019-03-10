@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -26,111 +25,137 @@ import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withVi
 
 public class Game extends Scene {
 
-    private Cap backgroundCap, floorCap, buildingsCap;
-    private Bitmap bitmapAux, imgFloor, imgCloud, imgBuildings, imgFondo, imgObstacle, imgGameOver, imgPause, imgPlay;
-    private ArrayList<Bitmap> bmBackGround, bmFloor, bmClouds, bmObstaculos, bmBuildings;
-    private Utils u;
-    private Obstacle obstaculo, obstaculo_;
-    private ArrayList<Cloud> arrayClouds;
-    private Character p;
-    private Live l;
-    private Bitmap[] bmDead, bmJump, bmRun, bmColision;
-    private long difTime;
-    private boolean endRun;
-    static boolean pause;
-    private static boolean endGame;
-    private Vibrator vibrator;
-    private SoundPool efectos;
-    private int hitEffect, jumpEffect, gameoverEffect, liveUp;
-    final private int maxSonidosSimultaneos = 5;
-    private Rect rectanguloGameOver, rectPausa, rectPlay;
-    private Paint paint;
+    //    private Cap backgroundCap;
+    private Cap floorCap;//Floor cap
+    private Cap buildingsCap;//Buildings cap
+    private Bitmap imgFloor;//Floor image
+    private Bitmap imgCloud;//Cloud image
+    private Bitmap imgBuildings;//Buildings image
+    private Bitmap imgFondo;//Background image
+    private Bitmap imgObstacle;//Obstacle image
+    private Bitmap imgGameOver;//End of the game image
+    private Bitmap imgPause;//Pause icon
+    private Bitmap imgPlay;//Play button
+    //    private ArrayList<Bitmap> bmBackGround;
+    private ArrayList<Bitmap> bmFloor;//Floor cap images
+    private ArrayList<Bitmap> bmClouds;//Clouds images
+    private ArrayList<Bitmap> bmObstacles;//Obstacles images
+    private ArrayList<Bitmap> bmBuildings;//Buildings images
+    private Utils u;//Utils class
+    private Obstacle obstaculo;//Game obstacle
+    private ArrayList<Cloud> arrayClouds;//Game clouds
+    private Character p;//Game main character
+    private Life l;//Game lives to catch
+    private Bitmap[] bmDeath;//Death animations
+    private Bitmap[] bmJump;//Jumping animations
+    private Bitmap[] bmRun;//Running animations
+    private long difTime;//Time diference to increase game speed
+    private boolean endRun;//End of character running
+    static boolean pause;//Pause controler
+    private static boolean endGame;//End of the game
+    private Vibrator vibrator;//Vibrator manager
+    private SoundPool efectos;//Sound effects manager
+    //    private int hitEffect;//Hit sound effect against obstacle
+//    private int jumpEffect;//Jumping sound effect
+//    private int gameoverEffect;//End of game sound effect
+//    private int liveUp;//Increase lives sound effect
+    final private int maxSonidosSimultaneos = 5;//Maximum number of simultaneous sounds
+    private Rect rectanguloGameOver;//Game over area to touch it
+    private Rect rectPausa;//Pausa button area
+    private Rect rectPlay;//Play area button
+//    private Paint paint;//Rectangles modifiers
 
-
-    public Game(Context context, int idEscena, int anchoPantalla, int altoPantalla) {
-        super(context, idEscena, anchoPantalla, altoPantalla);
+    /**
+     * Initialize character properties
+     *
+     * @param context      Context
+     * @param idScene      Scene ID
+     * @param screenWidth  Screen width
+     * @param screenHeight Screen height
+     */
+    public Game(Context context, int idScene, int screenWidth, int screenHeight) {
+        super(context, idScene, screenWidth, screenHeight);
         u = new Utils(context);
         this.endRun = false;
         this.endGame = false;
         this.pause = false;
 
-        paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(5);
+//        paint = new Paint();
+//        paint.setColor(Color.RED);
+//        paint.setStyle(Paint.Style.STROKE);
+//        paint.setStrokeWidth(5);
 
         difTime = System.currentTimeMillis();
         imgGameOver = BitmapFactory.decodeResource(context.getResources(), R.drawable.game_over);
-        imgGameOver = Bitmap.createScaledBitmap(imgGameOver, anchoPantalla / 2, anchoPantalla / 2, false);
-        rectanguloGameOver = new Rect(anchoPantalla / 2 - imgGameOver.getWidth() / 2, altoPantalla / 2 - imgGameOver.getHeight() / 2, anchoPantalla / 2 + imgGameOver.getWidth() / 2, altoPantalla / 2 + imgGameOver.getHeight() / 2);
-        rectPausa = new Rect(0, 0, anchoPantalla / 8, altoPantalla / 7);
+        imgGameOver = Bitmap.createScaledBitmap(imgGameOver, screenWidth / 2, screenWidth / 2, false);
+        rectanguloGameOver = new Rect(screenWidth / 2 - imgGameOver.getWidth() / 2, screenHeight / 2 - imgGameOver.getHeight() / 2, screenWidth / 2 + imgGameOver.getWidth() / 2, screenHeight / 2 + imgGameOver.getHeight() / 2);
+        rectPausa = new Rect(0, 0, screenWidth / 8, screenHeight / 7);
         imgPause = BitmapFactory.decodeResource(context.getResources(), R.drawable.pause_button);
-        imgPause = Bitmap.createScaledBitmap(imgPause, anchoPantalla / 8, altoPantalla / 7, false);
-        rectPlay = new Rect(anchoPantalla * 3 / 8, altoPantalla * 3 / 7, anchoPantalla * 5 / 8, altoPantalla * 5 / 7);
+        imgPause = Bitmap.createScaledBitmap(imgPause, screenWidth / 8, screenHeight / 7, false);
+        rectPlay = new Rect(screenWidth * 3 / 8, screenHeight * 3 / 7, screenWidth * 5 / 8, screenHeight * 5 / 7);
         imgPlay = BitmapFactory.decodeResource(context.getResources(), R.drawable.play_button);
-        imgPlay = Bitmap.createScaledBitmap(imgPlay, anchoPantalla * 3 / 8, altoPantalla * 3 / 7, false);
+        imgPlay = Bitmap.createScaledBitmap(imgPlay, screenWidth * 3 / 8, screenHeight * 3 / 7, false);
         //background
 //        bmBackGround = new ArrayList<>();
         imgFondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.game_dark_background);
-        imgFondo = Bitmap.createScaledBitmap(imgFondo, anchoPantalla, altoPantalla, false);
+        imgFondo = Bitmap.createScaledBitmap(imgFondo, screenWidth, screenHeight, false);
 //        bmBackGround.add(imgFondo);
 //        imgReflex = u.espejo(imgFondo, true);
 //        bmBackGround.add(Bitmap.createScaledBitmap(imgFondo, screenWidth, screenHeight, false));
 //        backgroundCap = new Cap(context, screenWidth, screenHeight, bmBackGround);
-//        backgroundCap.setVelocidad(-4);
+//        backgroundCap.setSpeed(-4);
 
         //buildings
         bmBuildings = new ArrayList<>();
         imgBuildings = BitmapFactory.decodeResource(context.getResources(), R.drawable.buildings);
-        imgBuildings = Bitmap.createScaledBitmap(imgBuildings, anchoPantalla, altoPantalla, false);
+        imgBuildings = Bitmap.createScaledBitmap(imgBuildings, screenWidth, screenHeight, false);
         bmBuildings.add(imgBuildings);
         bmBuildings.add(imgBuildings);
-        buildingsCap = new Cap(context, anchoPantalla, altoPantalla, bmBuildings);
-        buildingsCap.setVelocidad(-u.getDpW(6));
+        buildingsCap = new Cap(context, screenWidth, screenHeight, bmBuildings);
+        buildingsCap.setSpeed(-u.getDpW(6));
 
         //suelo
         bmFloor = new ArrayList<>();
         imgFloor = BitmapFactory.decodeResource(context.getResources(), R.drawable.suelo);
-        bmFloor.add(Bitmap.createScaledBitmap(imgFloor, anchoPantalla, altoPantalla / 6, false));
-        bmFloor.add(Bitmap.createScaledBitmap(imgFloor, anchoPantalla, altoPantalla / 6, false));
-        floorCap = new Cap(context, anchoPantalla, altoPantalla, bmFloor);
-        floorCap.setVelocidad(-u.getDpW(16));
-        floorCap.setPosY(altoPantalla * 7 / 8);
+        bmFloor.add(Bitmap.createScaledBitmap(imgFloor, screenWidth, screenHeight / 6, false));
+        bmFloor.add(Bitmap.createScaledBitmap(imgFloor, screenWidth, screenHeight / 6, false));
+        floorCap = new Cap(context, screenWidth, screenHeight, bmFloor);
+        floorCap.setSpeed(-u.getDpW(16));
+        floorCap.setPosY(screenHeight * 7 / 8);
 
         //nubes
         bmClouds = new ArrayList<>();
         arrayClouds = new ArrayList<>();
-        int fin = (int) (Math.random() * 7 + 2);
+        int end = (int) (Math.random() * 7 + 2);
         imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.little_cloud);
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 7, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 7, false));
         imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.dark_cloud);
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 5, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 5, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 5, false));
         imgCloud = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds_withalpha);
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
-        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, anchoPantalla / 3, altoPantalla / 7, false));
-        for (int i = 0; i < fin; i++) {
-            arrayClouds.add(new Cloud(context, anchoPantalla, altoPantalla, bmClouds));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 7, false));
+        bmClouds.add(Bitmap.createScaledBitmap(imgCloud, screenWidth / 3, screenHeight / 7, false));
+        for (int i = 0; i < end; i++) {
+            arrayClouds.add(new Cloud(context, screenWidth, screenHeight, bmClouds));
         }
 
         //obstaculo
-        bmObstaculos = new ArrayList<>();
+        bmObstacles = new ArrayList<>();
         imgObstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo1);
-        bmObstaculos.add(Bitmap.createScaledBitmap(imgObstacle, anchoPantalla / 10, altoPantalla / 8, false));
+        bmObstacles.add(Bitmap.createScaledBitmap(imgObstacle, screenWidth / 10, screenHeight / 8, false));
         imgObstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo2);
-        bmObstaculos.add(Bitmap.createScaledBitmap(imgObstacle, anchoPantalla / 10, altoPantalla / 8, false));
+        bmObstacles.add(Bitmap.createScaledBitmap(imgObstacle, screenWidth / 10, screenHeight / 8, false));
         imgObstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstaculo3);
-        bmObstaculos.add(Bitmap.createScaledBitmap(imgObstacle, anchoPantalla / 10, altoPantalla / 8, false));
-        obstaculo = new Obstacle(context, 0, floorCap.getPosY() - bmObstaculos.get(0).getHeight(), floorCap.getVelocidad(), anchoPantalla, altoPantalla, bmObstaculos);
+        bmObstacles.add(Bitmap.createScaledBitmap(imgObstacle, screenWidth / 10, screenHeight / 8, false));
+        obstaculo = new Obstacle(context, 0, floorCap.getPosY() - bmObstacles.get(0).getHeight(), floorCap.getSpeed(), screenWidth, screenHeight, bmObstacles);
 
-        l = new Live(context, anchoPantalla, altoPantalla);
+        l = new Life(context, screenWidth, screenHeight);
 
-        bmDead = u.getFrames(8, "dead", "pDead", anchoPantalla / 10);
-        bmJump = u.getFrames(5, "jump", "pJump", anchoPantalla / 10);
-        bmRun = u.getFrames(5, "run", "pRun", anchoPantalla / 10);
-        bmColision = u.getFrames(2, "collision", "pCollision", 200);
-        p = new Character(context, bmRun, bmJump, bmColision, bmDead, anchoPantalla, altoPantalla, 0, anchoPantalla / 3, floorCap.getPosY() - bmRun[0].getHeight());
+        bmDeath = u.getFrames(8, "dead", "pDead", screenWidth / 10);
+        bmJump = u.getFrames(5, "jump", "pJump", screenWidth / 10);
+        bmRun = u.getFrames(5, "run", "pRun", screenWidth / 10);
+        p = new Character(context, bmRun, bmJump, bmDeath, screenWidth, screenHeight, 0, screenWidth / 3, floorCap.getPosY() - bmRun[0].getHeight());
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -145,7 +170,7 @@ public class Game extends Scene {
 
 //        jumpEffect = efectos.load(context, R.raw.suuu, 1);
 //        hitEffect = efectos.load(context, R.raw.hit, 1);
-//        liveUp = efectos.load(context, R.raw.vida_mas, 1);
+//        lifeUp = efectos.load(context, R.raw.vida_mas, 1);
 
         if (withSound) {
 //            if(mediaPlayer==null){
@@ -160,6 +185,9 @@ public class Game extends Scene {
 
     }
 
+    /**
+     * All game components movements manager
+     */
     public void actualizarFisica() {
         if (!pause) {
             if (!endGame) {
@@ -174,7 +202,7 @@ public class Game extends Scene {
                 if (p.isJumping()) {
                     p.jump();
                 }
-                if (p.isDead() && p.getPosY() == p.getInitialPosY()) {
+                if (p.isDeath() && p.getPosY() == p.getInitialPosY()) {
                     endGame = true;
                     mediaPlayer.stop();
                 }
@@ -184,14 +212,12 @@ public class Game extends Scene {
                 if (p.rectPersonaje.intersect(obstaculo.rectObstacle) && obstaculo.isCollisionable()) {
                     obstaculo.setCollisionable(false);
                     p.setBroke(true);
-                    Log.i("xxxxObs", p.getLives() + "");
-                    p.setLives(p.getLives() - 1);
-                    Log.i("xxxxObs", p.getLives() + "");
+                    p.setLifes(p.getLifes() - 1);
 
 //                    efectos.play(hitEffect, vol, vol, 1, 0, 1);
-                    if (p.getLives() == 0) {
+                    if (p.getLifes() == 0) {
                         endRun = true;
-                        p.setDead(true);
+                        p.setDeath(true);
                         p.setBroke(false);
                         if (withVibration) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -207,25 +233,29 @@ public class Game extends Scene {
                     obstaculo.setCollisionable(true);
                     p.setBroke(false);
                 }
-                if (p.rectPersonaje.intersect(l.getRectLive()) && l.isCollisionable()) {
+                if (p.rectPersonaje.intersect(l.getRectLife()) && l.isCollisionable()) {
                     l.setCatched(true);
                     l.setCollisionable(false);
-                    if (p.getLives() != 3) {
-                        p.setLives(p.getLives() + 1);
+                    if (p.getLifes() != 3) {
+                        p.setLifes(p.getLifes() + 1);
 //                        if (withSound)
-//                            efectos.play(liveUp, vol, vol, 1, 0, 1);
+//                            efectos.play(lifeUp, vol, vol, 1, 0, 1);
                     }
-                    Log.i("xxxxLiv", p.getLives() + "");
                 }
-                if (p.getPosX() > l.getPosX() + l.getBitmapLive().getWidth()) {
+                if (p.getPosX() > l.getPosX() + l.getBitmapLife().getWidth()) {
                     l.setCollisionable(true);
                 }
-            } else {
-                p.setDead(true);
+            } else {//Death
+                p.setDeath(true);
             }
         }
     }
 
+    /**
+     * Paint game screen
+     *
+     * @param c Canvas
+     */
     public void dibujar(Canvas c) {
         try {
             c.drawBitmap(imgFondo, 0, 0, null);
@@ -240,23 +270,23 @@ public class Game extends Scene {
             p.dibujar(c);
 
             if (System.currentTimeMillis() - difTime > 15000 && !pause) {
-                buildingsCap.setVelocidad(buildingsCap.getVelocidad() - u.getDpW(2));
-                floorCap.setVelocidad(floorCap.getVelocidad() - u.getDpW(2));
+                buildingsCap.setSpeed(buildingsCap.getSpeed() - u.getDpW(2));
+                floorCap.setSpeed(floorCap.getSpeed() - u.getDpW(2));
                 for (Cloud cd : arrayClouds) {
                     cd.setMinRandom(+2);
                     cd.setMaxRandom(+2);
                 }
-                obstaculo.setSpeed(floorCap.getVelocidad());
+                obstaculo.setSpeed(floorCap.getSpeed());
                 p.setFrameTime(p.getFrameTime() - u.getDpW(2));
                 difTime = System.currentTimeMillis();
             }
             if (endRun) {
                 c.drawBitmap(imgGameOver, screenWidth / 2 - imgGameOver.getWidth() / 2, screenHeight / 2 - imgGameOver.getHeight() / 2, null);
-                //p.setDead(true);
-                if (!p.isJumping() && p.isDead()) {
+                //p.setDeath(true);
+                if (!p.isJumping() && p.isDeath()) {
                     p.setJumping(true);
                     p.setIndex(0);
-                    p.setPulsacionTime();
+                    p.setPressTime();
                 }
             }
             if (!pause)
@@ -272,17 +302,28 @@ public class Game extends Scene {
 
     }
 
-    public boolean pulsa(Rect boton, MotionEvent event) {
-        if (boton.contains((int) event.getX(), (int) event.getY())) {
+    /**
+     * Pressed button checker
+     *
+     * @param button Button rectangle
+     * @param event  Action event
+     * @return Button pressed
+     */
+    public boolean pulsa(Rect button, MotionEvent event) {
+        if (button.contains((int) event.getX(), (int) event.getY())) {
             return true;
         } else return false;
     }
 
+    /**
+     * Screen touch control
+     *
+     * @param event Press action
+     * @return Scene ID to change scene
+     */
     public int onTouchEvent(MotionEvent event) {
-        int pointerIndex = event.getActionIndex();        //Obtenemos el índice de la acción
-        int pointerID = event.getPointerId(pointerIndex); //Obtenemos el Id del pointer asociado a la acción
-        int accion = event.getActionMasked();             //Obtenemos el tipo de pulsación
-        switch (accion) {
+        int action = event.getActionMasked();             //Obtenemos el tipo de pulsación
+        switch (action) {
             case MotionEvent.ACTION_DOWN:           // Primer dedo toca
             case MotionEvent.ACTION_POINTER_DOWN:  // Segundo y siguientes tocan
                 break;
@@ -301,10 +342,10 @@ public class Game extends Scene {
                 }
 
                 //jump
-                else if (!p.isJumping() && !p.isDead() && !pause) {
+                else if (!p.isJumping() && !p.isDeath() && !pause) {
                     p.setJumping(true);
                     p.setIndex(0);
-                    p.setPulsacionTime();
+                    p.setPressTime();
 //                    if (withSound) {
 //                        efectos.play(jumpEffect, vol, vol, 1, 0, 1);
 //                    }
@@ -321,12 +362,12 @@ public class Game extends Scene {
 
                 break;
             default:
-                Log.i("Otra acción", "Acción no definida: " + accion);
+                Log.i("Otra acción", "Acción no definida: " + action);
         }
 
-        int idPadre = super.onTouchEvent(event);
-        if (idPadre != idScene) {
-            return idPadre;
+        int idFather = super.onTouchEvent(event);
+        if (idFather != idScene) {
+            return idFather;
         }
         return idScene;
     }

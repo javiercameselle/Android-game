@@ -11,24 +11,30 @@ import static com.example.came.cameselleabreujavier_proyecto.MainActivity.mediaP
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
 
 public class SceneControl extends SurfaceView implements SurfaceHolder.Callback {
-    private SurfaceHolder surfaceHolder;      // Interfaz abstracta para manejar la superficie de dibujado
-    private Context context;                  // Contexto de la aplicación
+    private SurfaceHolder surfaceHolder;      // Draw area manager
+    private Context context;                  // Application context
 
-    static int screenWidth = 1;              // Ancho de la pantalla, su valor se actualiza en el método surfaceChanged
-    static int screenHeight = 1;               // Alto de la pantalla, su valor se actualiza en el método surfaceChanged
-    private ThreadGame thread;                        // ThreadGame encargado de dibujar y actualizar la física
+    static int screenWidth = 1;              // Screen width
+    static int screenHeight = 1;               // Screen height
+    private ThreadGame thread;                        // ThreadGame manage onPaint y Move
     public boolean running = false;      // Control del thread
     private Scene actualScene;
 
     public SceneControl(Context context) {
         super(context);
-        this.surfaceHolder = getHolder();       // Se obtiene el holder
-        this.surfaceHolder.addCallback(this);   // Se indica donde van las funciones callback
-        this.context = context;                 // Obtenemos el contexto
-        thread = new ThreadGame();                      // Inicializamos el thread
-        setFocusable(true);                     // Aseguramos que reciba eventos de toque
+        this.surfaceHolder = getHolder();       // Get holder
+        this.surfaceHolder.addCallback(this);   // Starts where callbacks function are
+        this.context = context;                 // Get context
+        thread = new ThreadGame();                      // Initialize thread
+        setFocusable(true);                     // Allow receive touch event
     }
 
+    /**
+     * Control scene manager
+     *
+     * @param event Press action
+     * @return true
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         synchronized (surfaceHolder) {
@@ -80,21 +86,21 @@ public class SceneControl extends SurfaceView implements SurfaceHolder.Callback 
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        screenWidth = width;               // se establece el nuevo ancho de pantalla
-        screenHeight = height;               // se establece el nuevo alto de pantalla
-        thread.setSurfaceSize(width, height);   // se establece el nuevo ancho y alto de pantalla en el thread
+        screenWidth = width;               // New screen width
+        screenHeight = height;               // New screen height
+        thread.setSurfaceSize(width, height);   // New screen measures on surface
         actualScene = new MainMenu(context, 0, screenWidth, screenHeight);
-        thread.setRunning(true); // Se le indica al thread que puede arrancar
+        thread.setRunning(true); // Allow to start thread
         if (thread.getState() == Thread.State.NEW)
-            thread.start(); // si el thread no ha sido creado se crea;
-        if (thread.getState() == Thread.State.TERMINATED) {      // si el thread ha sido finalizado se crea de nuevo;
+            thread.start();
+        if (thread.getState() == Thread.State.TERMINATED) {
             thread = new ThreadGame();
-            thread.start(); // se arranca el thread
+            thread.start();
         }
     }
 
 
-    // Clase ThreadGame en la cual implementamos el método de dibujo (y física) para que se haga en paralelo con la gestión de la interfaz de usuario
+    // Implement paint method to manage user interface
     class ThreadGame extends Thread {
         public ThreadGame() {
 
@@ -103,18 +109,18 @@ public class SceneControl extends SurfaceView implements SurfaceHolder.Callback 
         @Override
         public void run() {
             while (running) {
-                Canvas c = null; //Necesario repintar _todo el lienzo
+                Canvas c = null; //It need to repaint canvas
                 try {
                     if (!surfaceHolder.getSurface().isValid())
-                        continue; // si la superficie no está preparada repetimos
-                    c = surfaceHolder.lockCanvas(); // Obtenemos el lienzo.  La sincronización es necesaria por ser recurso común
+                        continue; // If canvas is not preapared to paint
+                    c = surfaceHolder.lockCanvas(); // Commons resources need syncro
                     synchronized (surfaceHolder) {
-                        actualScene.actualizarFisica();  // Movimiento de los elementos
-                        actualScene.dibujar(c);              // Dibujamos los elementos
+                        actualScene.actualizarFisica();  // Components move
+                        actualScene.dibujar(c);          // Components paint
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                } finally {  // Haya o no excepción, hay que liberar el lienzo
+                } finally {  // It must release Canvas
                     if (c != null) {
                         surfaceHolder.unlockCanvasAndPost(c);
                     }
@@ -122,15 +128,23 @@ public class SceneControl extends SurfaceView implements SurfaceHolder.Callback 
             }
         }
 
-        // Activa o desactiva el funcionamiento del thread
+        /**
+         * Active/desactive game thread
+         *
+         * @param flag
+         */
         public void setRunning(boolean flag) {
             running = flag;
         }
 
-        // Función es llamada si cambia el tamaño de la pantall o la orientación
+        /**
+         * Give us screen width and height
+         *
+         * @param width
+         * @param height
+         */
         public void setSurfaceSize(int width, int height) {
-            synchronized (surfaceHolder) {  // Se recomienda realizarlo de forma atómica
-
+            synchronized (surfaceHolder) {
             }
         }
     }
