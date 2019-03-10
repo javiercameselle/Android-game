@@ -25,7 +25,7 @@ public class Credits extends Scene {
     private CameraManager cameraManager;
     private boolean flash;
     private int screenWidth, screenHeight;
-    private String[] credits = {"game-icons.net", "noisefuns.com", "iconarchive.com", "opengameart.com", "youtube.com", "BoxCatGames", "SoundBible", "Sara Méndez", "Javier Conde", "Álvaro Cayetano", "Diego Bea", "Pablo Fernández"};
+    private String[] credits = {"game-icons.net", "noisefuns.com", "iconarchive.com", "opengameart.com", "youtube.com", "BoxCatGames", "SoundBible", "Sara Méndez", "Javier Conde", "Álvaro Cayetano", "Diego Bea", "Pablo Fernández", "Franco Alessandrini"};
 
     public Credits(Context context, int idEscena, int screenWidth, int screenHeight) {
         super(context, idEscena, screenWidth, screenHeight);
@@ -50,7 +50,7 @@ public class Credits extends Scene {
         posY = new ArrayList<Integer>();
         posY.add(screenHeight / 2);
         int sep = 0;
-        for (int i = 1; i < 20; i++) {
+        for (int i = 1; i <= 20; i++) {
             if (i == 1 || i == 5 || i == 7 || i == 11 || i == 18) {
                 sep = 50;
             } else {
@@ -103,9 +103,10 @@ public class Credits extends Scene {
             c.drawText(credits[9] + " ", posX, posY.get(14), pText);
             c.drawText(credits[10] + " ", posX, posY.get(15), pText);
             c.drawText(credits[11] + " ", posX, posY.get(16), pText);
-            c.drawText("  " + context.getString(R.string.author), posX, posY.get(17), pTextNameCategory);
-            c.drawText(context.getString(R.string.name), posX, posY.get(18), pTextNameCategory);
-            c.drawText("" + context.getString(R.string.social_media), posX, posY.get(19), pText);
+            c.drawText(credits[12] + " ", posX, posY.get(17), pText);
+            c.drawText("  " + context.getString(R.string.author), posX, posY.get(18), pTextNameCategory);
+            c.drawText(context.getString(R.string.name), posX, posY.get(19), pTextNameCategory);
+            c.drawText("" + context.getString(R.string.social_media), posX, posY.get(20), pText);
             super.dibujar(c);
         } catch (Exception e) {
             Log.i("ERROR AL DIBUJAR", e.getLocalizedMessage());

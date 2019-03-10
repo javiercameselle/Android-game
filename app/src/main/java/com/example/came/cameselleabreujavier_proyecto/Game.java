@@ -53,6 +53,7 @@ public class Game extends Scene {
         this.endRun = false;
         this.endGame = false;
         this.pause = false;
+
         paint = new Paint();
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
@@ -142,10 +143,9 @@ public class Game extends Scene {
             this.efectos = new SoundPool(maxSonidosSimultaneos, AudioManager.STREAM_MUSIC, 0);
         }
 
-        jumpEffect = efectos.load(context, R.raw.suuu, 1);
-        hitEffect = efectos.load(context, R.raw.hit, 1);
-        gameoverEffect = efectos.load(context, R.raw.muerte, 1);
-        liveUp = efectos.load(context, R.raw.vida_mas, 1);
+//        jumpEffect = efectos.load(context, R.raw.suuu, 1);
+//        hitEffect = efectos.load(context, R.raw.hit, 1);
+//        liveUp = efectos.load(context, R.raw.vida_mas, 1);
 
         if (withSound) {
 //            if(mediaPlayer==null){
@@ -188,7 +188,7 @@ public class Game extends Scene {
                     p.setLives(p.getLives() - 1);
                     Log.i("xxxxObs", p.getLives() + "");
 
-                    efectos.play(hitEffect, vol, vol, 1, 0, 1);
+//                    efectos.play(hitEffect, vol, vol, 1, 0, 1);
                     if (p.getLives() == 0) {
                         endRun = true;
                         p.setDead(true);
@@ -200,8 +200,6 @@ public class Game extends Scene {
                                 vibrator.vibrate(500);
                             }
                         }
-                        if (withSound)
-                            efectos.play(gameoverEffect, vol, vol, 1, 0, 1);
                     }
                 }
 
@@ -214,8 +212,8 @@ public class Game extends Scene {
                     l.setCollisionable(false);
                     if (p.getLives() != 3) {
                         p.setLives(p.getLives() + 1);
-                        if (withSound)
-                            efectos.play(liveUp, vol, vol, 1, 0, 1);
+//                        if (withSound)
+//                            efectos.play(liveUp, vol, vol, 1, 0, 1);
                     }
                     Log.i("xxxxLiv", p.getLives() + "");
                 }
@@ -255,8 +253,6 @@ public class Game extends Scene {
             if (endRun) {
                 c.drawBitmap(imgGameOver, screenWidth / 2 - imgGameOver.getWidth() / 2, screenHeight / 2 - imgGameOver.getHeight() / 2, null);
                 //p.setDead(true);
-                if (withSound)
-                    efectos.play(gameoverEffect, vol, vol, 1, 0, 1);
                 if (!p.isJumping() && p.isDead()) {
                     p.setJumping(true);
                     p.setIndex(0);
@@ -303,15 +299,15 @@ public class Game extends Scene {
                 } else if (pulsa(rectPlay, event) && pause == true) {
                     this.pause = false;
                 }
-                
+
                 //jump
                 else if (!p.isJumping() && !p.isDead() && !pause) {
                     p.setJumping(true);
                     p.setIndex(0);
                     p.setPulsacionTime();
-                    if (withSound) {
-                        efectos.play(jumpEffect, vol, vol, 1, 0, 1);
-                    }
+//                    if (withSound) {
+//                        efectos.play(jumpEffect, vol, vol, 1, 0, 1);
+//                    }
                 }
                 if (pulsa(rectanguloGameOver, event) && endGame && endRun) {
                     return 6;

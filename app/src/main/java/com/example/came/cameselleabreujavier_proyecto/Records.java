@@ -17,23 +17,25 @@ import java.util.HashMap;
 
 public class Records extends Scene {
 
-    private Bitmap imgBuildingsShadow, imgGold, imgSilver, imgBronze, imgMedal;
-    private HashMap<String, Integer> values;
+    private Bitmap imgBuildingsShadow, imgGold, imgSilver, imgBronze, imgMedal, imgDrop;
     private ArrayList<String> names;
     private ArrayList<Integer> distances;
     private int screenWidth, screenHeight;
     private Utils u;
     private Paint pText, pRect1, pRect2, pRect3;
-    private Rect rectFirst, rectSecond, rectThird;
+    private Rect rectFirst, rectSecond, rectThird, rectDrop;
+//    private boolean dropped;
 
     public Records(Context context, int idScene, int screenWidth, int screenHeight) {
         super(context, idScene, screenWidth, screenHeight);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        values = new HashMap<>();
+//        this.dropped = false;
         names = new ArrayList<>();
         distances = new ArrayList<>();
         u = new Utils(context);
+
+//  rectDrop = new Rect(0, 0, screenWidth * 2 / 8, screenHeight * 2 / 6);
 
         rectFirst = new Rect(screenWidth / 3, screenHeight / 3, screenWidth * 2 / 3, screenHeight);
         rectSecond = new Rect(0, screenHeight / 2, screenWidth / 3, screenHeight);
@@ -71,6 +73,9 @@ public class Records extends Scene {
         imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings2);
         imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, screenWidth, screenHeight, false);
 
+//        imgDrop = BitmapFactory.decodeResource(context.getResources(), R.drawable.droptable);
+//        imgDrop = Bitmap.createScaledBitmap(imgDrop, screenWidth * 2 / 8, screenHeight * 2 / 6, false);
+
         DataBase db = new DataBase(context, "records", null, 1);
         SQLiteDatabase database = db.getWritableDatabase();
         String query = "select * from records order by distance desc";
@@ -87,7 +92,6 @@ public class Records extends Scene {
                 distance = c.getInt(1);
                 distances.add(distance);
 //                Log.i("xxxDistance", distance + "");
-                values.put(name, distance);
             } while (c.moveToNext());
         }
         if (database != null) {
@@ -103,11 +107,13 @@ public class Records extends Scene {
         try {
             c.drawBitmap(background, 0, 0, null);
             c.drawBitmap(imgBuildingsShadow, 0, 0, null);
+//            c.drawBitmap(imgDrop, rectDrop.centerX() - imgDrop.getWidth() / 2, rectDrop.centerY() - imgDrop.getHeight() / 2, null);
             super.dibujar(c);
             c.drawText(context.getString(R.string.records), screenWidth / 2, u.getDpH(200), pText2);
             c.drawRect(rectFirst, pRect1);
             c.drawRect(rectSecond, pRect2);
             c.drawRect(rectThird, pRect3);
+//            if (!dropped) {
             for (int i = 0; i < names.size(); i++) {
                 if (i == 0) {
 //                    this.pText.setColor(Color.rgb(245, 208, 111));
@@ -127,8 +133,7 @@ public class Records extends Scene {
 //
 //                c.drawText( e.getKey() + " - " + e.getValue(), u.getDpW(200), u.getDpH((i + 1) * 150), this.pText);
             }
-
-
+//            }
         } catch (Exception e) {
             Log.i("ERROR AL DIBUJAR", e.getLocalizedMessage());
         }
@@ -152,6 +157,18 @@ public class Records extends Scene {
 
             case MotionEvent.ACTION_UP:                     // Al levantar el último dedo
             case MotionEvent.ACTION_POINTER_UP:  // Al levantar un dedo que no es el último
+                if (pulsa(rectDrop, event)) {
+//                    TO IMPLEMENT
+//                    DataBase db = new DataBase(context, "records", null, 1);
+//                    SQLiteDatabase database = db.getWritableDatabase();
+//                    String query = "delete from records";
+//                    database.execSQL(query);
+//                    if (database != null) {
+//                        database.close();
+//                    }
+//                    dropped = true;
+                }
+
                 break;
 
 
