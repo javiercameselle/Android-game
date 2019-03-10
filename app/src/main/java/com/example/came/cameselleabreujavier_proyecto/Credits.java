@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class Credits extends Scene {
 
     private Paint pText, pTextNameCategory;
-    private Bitmap imgBuildingsShadow, imgIconito;
+    private Bitmap imgBuildingsShadow;
     private int posX;
     private String camID;
     private ArrayList<Integer> posY;
@@ -45,9 +45,6 @@ public class Credits extends Scene {
 
         imgBuildingsShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.darks_buildings2);
         imgBuildingsShadow = Bitmap.createScaledBitmap(imgBuildingsShadow, screenWidth, screenHeight, false);
-
-        imgIconito = BitmapFactory.decodeResource(context.getResources(), R.drawable.running1);
-        imgIconito = Bitmap.createScaledBitmap(imgIconito, screenWidth / 3, screenHeight / 3, false);
 
         this.posX = screenWidth / 2;
         posY = new ArrayList<Integer>();

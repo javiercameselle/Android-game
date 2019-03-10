@@ -65,7 +65,7 @@ public class Character {
     public void mover() {
         if (System.currentTimeMillis() - actualTime > frameTime) {
             if (jumping && !dead) {
-                rectPersonaje = new Rect(posX + bmJump[index].getWidth() / 4, posY + bmJump[index].getHeight() / 2,
+                rectPersonaje = new Rect(posX + bmJump[index].getWidth() / 4, posY,
                         posX + bmJump[index].getWidth() * 2 / 3, posY + bmJump[index].getHeight());
                 if (index < bmJump.length - 1)
                     index++;
@@ -73,7 +73,7 @@ public class Character {
                 if (index < bmDead.length - 1)
                     index++;
             } else {
-                rectPersonaje = new Rect(posX + bmRun[index].getWidth() / 4, posY + bmRun[index].getHeight() / 2,
+                rectPersonaje = new Rect(posX + bmRun[index].getWidth() / 4, posY,
                         posX + bmRun[index].getWidth() * 2 / 3, posY + bmRun[index].getHeight());
                 index++;
                 if (index == bmRun.length) index = 0;

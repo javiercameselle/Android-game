@@ -12,7 +12,7 @@
     <string name="thanks">Agradecimientos a:</string>
     <string name="textures">Texturas y animaciones del personaje</string>
     <string name="people">A las personas que me han apoyado y han probado el juego</string>
-    <string name="submit">Guardar récord</string>
+    <string name="submit">Guardar</string>
     <string name="options_help">Diferentes opciones para el el juego</string>
     <string name="game_help">Pantalla donde jugar. Habrá que correr y saltar para alcanzar el récord de mayor distancia.</string>
     <string name="save_help">Pantalla para guardar la distancia recorrida por el jugador</string>

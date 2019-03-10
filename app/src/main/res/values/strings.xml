@@ -13,7 +13,7 @@
     <string name="textures">Textures and character animations</string>
     <string name="people">People who had supported me and tried the game.</string>
     <string name="name" translatable="false">Javier Cameselle</string>
-    <string name="submit">Save record</string>
+    <string name="submit">Save</string>
     <string name="options_help">Differents options for the game</string>
     <string name="game_help">Screen where we are going to play. It have to run and jump obstacles to reach the longest distance record.</string>
     <string name="save_help">Screen to save the player\'s distance</string>
