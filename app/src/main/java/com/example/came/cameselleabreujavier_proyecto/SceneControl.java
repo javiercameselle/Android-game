@@ -7,6 +7,14 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.came.cameselleabreujavier_proyecto.Scenes.Credits;
+import com.example.came.cameselleabreujavier_proyecto.Scenes.Game;
+import com.example.came.cameselleabreujavier_proyecto.Scenes.MainMenu;
+import com.example.came.cameselleabreujavier_proyecto.Scenes.Save;
+import com.example.came.cameselleabreujavier_proyecto.Scenes.Help;
+import com.example.came.cameselleabreujavier_proyecto.Scenes.Options;
+import com.example.came.cameselleabreujavier_proyecto.Scenes.Records;
+
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.mediaPlayer;
 import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSound;
 
@@ -18,8 +26,8 @@ public class SceneControl extends SurfaceView implements SurfaceHolder.Callback 
     private SurfaceHolder surfaceHolder;      // Draw area manager
     private Context context;                  // Application context
 
-    static int screenWidth = 1;              // Screen width
-    static int screenHeight = 1;               // Screen height
+    public static int screenWidth = 1;              // Screen width
+    public static int screenHeight = 1;               // Screen height
     private ThreadGame thread;                        // ThreadGame manage onPaint y Move
     public boolean running = false;      // Control del thread
     private Scene actualScene;

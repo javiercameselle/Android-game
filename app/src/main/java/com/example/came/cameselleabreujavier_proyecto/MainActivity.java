@@ -20,11 +20,11 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    protected static MediaPlayer mediaPlayer;//Music player
-    protected static AudioManager audioManager;//Sound effects and volume manager
-    protected static boolean withSound, withVibration, musicStarted;
+    public static MediaPlayer mediaPlayer;//Music player
+    public static AudioManager audioManager;//Sound effects and volume manager
+    public static boolean withSound, withVibration, musicStarted;
     private SceneControl p;//Scene control class
-    protected static Typeface faw;
+    public static Typeface faw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

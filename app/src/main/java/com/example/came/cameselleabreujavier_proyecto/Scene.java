@@ -25,16 +25,16 @@ import static com.example.came.cameselleabreujavier_proyecto.MainActivity.withSo
 public class Scene {
 
 
-    Context context;
-    int idScene;//Scene ID
-    int screenWidth, screenHeight;
-    Bitmap background;//Background image
-    Paint pText, pText2;//Text scene modifier
-    Rect rMenu;//Button area to go back
-    Bitmap bmGoBack;//Button image to go back
-    SoundPool effects;//Sound effects
-    int selection, maxSimultaneousSounds = 2, vol;
-    SharedPreferences preferences;//Options prefences
+    public Context context;
+    public int idScene;//Scene ID
+    public int screenWidth, screenHeight;
+    public Bitmap background;//Background image
+    public Paint pText, pText2;//Text scene modifier
+    public Rect rMenu;//Button area to go back
+    public Bitmap bmGoBack;//Button image to go back
+    public SoundPool effects;//Sound effects
+    public int selection, maxSimultaneousSounds = 2, vol;
+    public SharedPreferences preferences;//Options prefences
 
     /**
      * Initialize Scene components
