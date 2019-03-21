@@ -89,6 +89,7 @@ public class Save extends Scene {
         pText2 = new Paint();
         pText2.setColor(Color.BLACK);
         pText2.setTextSize(u.getDpW(100));
+        pText2.setFakeBoldText(true);
         pText2.setTypeface(faw);
 
         pText3 = new Paint();
@@ -115,23 +116,23 @@ public class Save extends Scene {
 //        Log.i("xxxx", "METROS:" + metres + "  - ancho:" + screenWidth + " - alto:" + screenHeight + " - ancho/10:" + screenWidth / 10 + " - alto/10:" + screenHeight);
         c.drawBitmap(up, flUp.centerX() - up.getWidth() / 2, flUp.centerY() - up.getHeight() / 2, null);
 //        c.drawRect(fl,pRect);
-        c.drawText(letter.charAt(flCont) + "", fl.centerX(), fl.centerY(), pText);
+        c.drawText(letter.charAt(flCont) + "", fl.centerX(), fl.centerY()+u.getDpH(25), pText);
         c.drawBitmap(down, flDown.centerX() - down.getWidth() / 2, flDown.centerY() - down.getHeight() / 2, null);
 
         c.drawBitmap(up, slUp.centerX() - up.getWidth() / 2, slUp.centerY() - up.getHeight() / 2, null);
 //        c.drawRect(sl,pRect);
-        c.drawText(letter.charAt(slCont) + "", sl.centerX(), sl.centerY(), pText);
+        c.drawText(letter.charAt(slCont) + "", sl.centerX(), sl.centerY()+u.getDpH(25), pText);
         c.drawBitmap(down, slDown.centerX() - down.getWidth() / 2, slDown.centerY() - down.getHeight() / 2, null);
 
         c.drawBitmap(up, tlUp.centerX() - up.getWidth() / 2, tlUp.centerY() - up.getHeight() / 2, null);
 //        c.drawRect(tl,pRect);
-        c.drawText(letter.charAt(tlCont) + "", tl.centerX(), tl.centerY(), pText);
+        c.drawText(letter.charAt(tlCont) + "", tl.centerX(), tl.centerY()+u.getDpH(25), pText);
         c.drawBitmap(down, tlDown.centerX() - down.getWidth() / 2, tlDown.centerY() - down.getHeight() / 2, null);
 
         c.drawBitmap(bitmapButton, button.centerX() - bitmapButton.getWidth() / 2, button.centerY() - bitmapButton.getHeight() / 2, null);
         c.drawText(context.getString(R.string.submit), button.centerX(), button.centerY(), pText3);
 
-        c.drawText(context.getString(R.string.distance) + ": " + metres + " m", u.getDpW(screenWidth) * 2 / 5, u.getDpH(100), pText2);
+        c.drawText(context.getString(R.string.distance) + ": " + metres + " m", u.getDpW(screenWidth) * 3 / 5, u.getDpH(150), pText2);
 
         super.dibujar(c);
     }

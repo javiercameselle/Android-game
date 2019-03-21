@@ -192,8 +192,8 @@ public class Game extends Scene {
         imgShoot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot);
         imgShoot = Bitmap.createScaledBitmap(imgShoot, screenWidth / 10, screenHeight / 8, false);
 
-        rectMoveBack = new Rect(screenWidth / 10 - screenWidth / 20, screenHeight * 6 / 8, screenWidth * 2 / 10, screenHeight * 7 / 8);
-        rectMoveForward = new Rect(screenWidth * 2 / 10, screenHeight * 6 / 8, screenWidth * 3 / 10, screenHeight * 7 / 8);
+        rectMoveBack = new Rect(screenWidth / 10 - screenWidth / 20, screenHeight * 7 / 8, screenWidth * 2 / 10, screenHeight * 8 / 8);
+        rectMoveForward = new Rect(screenWidth * 2 / 10, screenHeight * 7 / 8, screenWidth * 3 / 10, screenHeight * 8 / 8);
         imgBack = BitmapFactory.decodeResource(context.getResources(), R.drawable.back);
         imgBack = Bitmap.createScaledBitmap(imgBack, screenWidth / 10, screenHeight / 8, false);
         imgForward = BitmapFactory.decodeResource(context.getResources(), R.drawable.forward);

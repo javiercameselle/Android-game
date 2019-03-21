@@ -67,7 +67,7 @@ public class Records extends Scene {
         this.pText = new Paint();
         this.pText.setColor(Color.BLACK);
         this.pText.setTextAlign(Paint.Align.CENTER);
-        this.pText.setTextSize(u.getDpW(70));
+        this.pText.setTextSize(u.getDpW(150));
         this.pText.setTypeface(faw);
 
         this.pRect1 = new Paint();
@@ -147,17 +147,17 @@ public class Records extends Scene {
                 if (i == 0) {
 //                    this.pText.setColor(Color.rgb(245, 208, 111));
                     c.drawBitmap(imgMedal, rectFirst.centerX() - imgMedal.getWidth() / 2, rectFirst.centerY() - imgMedal.getHeight() / 2, null);
-                    c.drawText(names.get(i) + " - " + distances.get(i) + "m.", rectFirst.centerX(), rectFirst.top + u.getDpH(100), this.pText);
+                    c.drawText(names.get(i) + " - " + distances.get(i) + "m.", rectFirst.centerX(), rectFirst.top + u.getDpH(150), this.pText);
                 }
                 if (i == 1) {
 //                    this.pText.setColor(Color.rgb(192, 192, 192));
-                    c.drawBitmap(imgMedal, rectSecond.centerX() - imgMedal.getWidth() / 2, rectSecond.centerY() - imgMedal.getHeight() / 2, null);
-                    c.drawText(names.get(i) + " - " + distances.get(i) + "m.", rectSecond.centerX(), rectSecond.top + u.getDpH(100), this.pText);
+                    c.drawBitmap(imgMedal, rectSecond.centerX() - imgMedal.getWidth() / 2, rectSecond.centerY(), null);
+                    c.drawText(names.get(i) + " - " + distances.get(i) + "m.", rectSecond.centerX(), rectSecond.top + u.getDpH(150), this.pText);
                 }
                 if (i == 2) {
 //                    this.pText.setColor(Color.rgb(205, 127, 50));
-                    c.drawBitmap(imgMedal, rectThird.centerX() - imgMedal.getWidth() / 2, rectThird.centerY() - imgMedal.getHeight() / 2, null);
-                    c.drawText(names.get(i) + " - " + distances.get(i) + "m.", rectThird.centerX(), rectThird.top + u.getDpH(100), this.pText);
+                    c.drawBitmap(imgMedal, rectThird.centerX() - imgMedal.getWidth() / 2, rectThird.centerY(), null);
+                    c.drawText(names.get(i) + " - " + distances.get(i) + "m.", rectThird.centerX(), rectThird.top + u.getDpH(150), this.pText);
                 }
 //
 //                c.drawText( e.getKey() + " - " + e.getValue(), u.getDpW(200), u.getDpH((i + 1) * 150), this.pText);

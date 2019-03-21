@@ -15,9 +15,9 @@
     <string name="name" translatable="false">Javier Cameselle</string>
     <string name="submit">Save</string>
     <string name="options_help">Differents options for the game</string>
-    <string name="game_help">Screen where we are going to play. It have to run and jump obstacles to reach the longest distance record.</string>
+    <string name="game_help">Screen game. It have to run, shoot and jump obstacles to reach the longest distance record</string>
     <string name="save_help">Screen to save the player\'s distance</string>
-    <string name="menu_help">Main menu where you can play, see the records, credits, exit, access to help menu or options screen</string>
+    <string name="menu_help">Main menu to choose game options</string>
     <string name="records_help">Game records can be seen on this screen</string>
     <string name="music_sounds">Music and sounds effects</string>
     <string name="social_media">Social media   IG:@jcameselle97</string>

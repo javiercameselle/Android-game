@@ -94,6 +94,7 @@ public class Character {
         p.setStrokeWidth(5);
         pText = new Paint();
         pText.setTextSize(u.getDpW(100));
+        pText.setFakeBoldText(true);
         pText.setColor(Color.BLACK);
         pText.setTypeface(faw);
     }
@@ -166,7 +167,7 @@ public class Character {
         }
         c.drawBitmap(bmLifes[lifes], u.getDpW(300), u.getDpH(75), null);
         c.drawBitmap(bitmapBullets, u.getDpW(700), u.getDpH(75), null);
-        c.drawText(getBullets()+"", u.getDpW(850), u.getDpH(150), pText);
+        c.drawText(getBullets() + "", u.getDpW(850), u.getDpH(150), pText);
         c.drawText(context.getString(R.string.distance) + ": " + metres + " m", u.getDpW(screenWidth) * 3 / 5, u.getDpH(150), pText);
         if (isBroke()) {
             p.setAlpha((int) (Math.random() * 255 + 100));

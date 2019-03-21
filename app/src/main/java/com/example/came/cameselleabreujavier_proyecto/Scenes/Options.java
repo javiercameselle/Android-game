@@ -77,7 +77,7 @@ public class Options extends Scene {
 
         pText = new Paint();
         pText.setColor(Color.WHITE);
-        pText.setTextSize(u.getDpW(200));
+        pText.setTextSize(u.getDpW(300));
         pText.setTypeface(faw);
 
         pBoton = new Paint();

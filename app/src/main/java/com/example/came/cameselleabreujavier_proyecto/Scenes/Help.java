@@ -61,7 +61,7 @@ public class Help extends Scene {
         pText = new Paint();
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setColor(Color.BLACK);
-        pText.setTextSize(u.getDpW(25));
+        pText.setTextSize(u.getDpW(75));
         pText.setFakeBoldText(true);
         pText.setTypeface(faw);
         pRectangle = new Paint();

@@ -36,7 +36,7 @@ public class Credits extends Scene {
     private CameraManager cameraManager;//Allow to use camera
     private boolean flash;//Flash (not) enabled
     private int screenWidth, screenHeight;//Screen measures
-    private String[] credits = {"game-icons.net", "noisefuns.com", "iconarchive.com", "opengameart.com", "youtube.com", "BoxCatGames", "SoundBible", "Sara Mendez", "Javier Conde", "Alvaro Cayetano", "Diego Bea", "Pablo Fernandez", "Franco Alessandrini"};//Credits names
+    private String[] credits = {"game-icons.net", "noisefuns.com", "iconarchive.com", "opengameart.com", "youtube.com", "BoxCatGames", "SoundBible", "Sara Méndez", "Javier Conde", "Álvaro Cayetano", "Diego Bea", "Pablo Fernández", "Franco Alessandrini"};//Credits names
 
 
     /**
@@ -80,7 +80,7 @@ public class Credits extends Scene {
         }
 
         pText = new Paint();
-        pText.setTextSize(u.getDpW(50));
+        pText.setTextSize(u.getDpW(100));
         pText.setColor(Color.rgb(253, 236, 166));
         pText.setFakeBoldText(true);
         pText.setTextAlign(Paint.Align.CENTER);
@@ -134,7 +134,7 @@ public class Credits extends Scene {
             c.drawText(credits[11] + " ", posX, posY.get(16), pText);
             c.drawText(credits[12] + " ", posX, posY.get(17), pText);
             c.drawText("  " + context.getString(R.string.author), posX, posY.get(18), pTextNameCategory);
-            c.drawText(context.getString(R.string.name), posX, posY.get(19), pTextNameCategory);
+            c.drawText(context.getString(R.string.name), posX, posY.get(19), pText);
             c.drawText("" + context.getString(R.string.social_media), posX, posY.get(20), pText);
             super.dibujar(c);
         } catch (Exception e) {
